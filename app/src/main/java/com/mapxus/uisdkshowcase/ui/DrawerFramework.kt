@@ -1,6 +1,5 @@
 package com.mapxus.uisdkshowcase.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -81,7 +80,9 @@ fun ModuleDrawerFramework(
                 content = { innerPadding ->
                     ItemViewPager(
                         items = modules[currentModuleIndex].items,
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .padding(horizontal = 10.dp),
                         onItemClicked = onItemClicked
                     )
                 }
