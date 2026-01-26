@@ -28,4 +28,28 @@ object ConfigHolder {
         set(value) {
             configBuilder.mapStyle = value
         }
+
+    var appearanceMode
+        get() = configBuilder.appearanceMode
+        set(value) {
+            configBuilder.appearanceMode = value
+        }
+
+    var colors
+        get() = configBuilder.colors
+        set(value) {
+            configBuilder.colors = value
+        }
+
+    var shapes
+        get() = configBuilder.shapes
+        set(value) {
+            configBuilder.shapes = value
+        }
+
+    var materialResourcePath
+        get() = configBuilder.materialResourcePath
+        set(value) {
+            configBuilder.materialResourcePath = value
+        }
 }

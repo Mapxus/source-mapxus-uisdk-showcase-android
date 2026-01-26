@@ -12,6 +12,7 @@ dropinui-common = "7.10.0"
 dropinui-beta = "7.10.0-beta.1"
 nav3 = "1.0.0"
 kotlinxSerialization = "1.10.0"
+colorpicker = "1.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,9 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 # mapxus
 mapxus-dropin = { module = "com.mapxus:dropin", version.ref = "dropinui-common" }
 mapxus-dropin-jp = { module = "com.mapxus:dropin-jp", version.ref = "dropinui-common" }
+
+# Github
+compose-colorpicker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

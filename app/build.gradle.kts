@@ -62,4 +62,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.mapxus.dropin)
+
+    implementation(libs.compose.colorpicker)
 }

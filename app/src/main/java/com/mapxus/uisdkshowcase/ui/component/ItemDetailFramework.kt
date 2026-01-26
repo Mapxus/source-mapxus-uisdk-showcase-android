@@ -1,5 +1,6 @@
 package com.mapxus.uisdkshowcase.ui.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,7 +43,8 @@ fun ItemDetailFramework(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState()),
-                content = content
+                content = content,
+                verticalArrangement = Arrangement.Center
             )
         },
         topBar = {
