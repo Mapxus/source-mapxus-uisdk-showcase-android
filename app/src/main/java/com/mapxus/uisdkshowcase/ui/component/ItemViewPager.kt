@@ -11,9 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,8 +24,7 @@ import com.mapxus.uisdkshowcase.model.item.Item
 
 @Composable
 fun ItemViewPager(items: List<Item>, modifier: Modifier = Modifier, onItemClicked: (Item) -> Unit) {
-    val pagerState = rememberPagerState { items.size }
-
+    val pagerState = remember(items) { PagerState { items.size } }
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         HorizontalPager(
             pagerState,
