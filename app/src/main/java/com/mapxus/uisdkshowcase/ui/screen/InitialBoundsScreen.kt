@@ -28,10 +28,14 @@ import kotlinx.coroutines.launch
 fun InitialBoundsScreen(item: Item, modifier: Modifier = Modifier, onBack: () -> Unit) {
     var enable by remember { mutableStateOf(ConfigHolder.initialBounds != null) }
 
-    val minLatTextState = rememberTextFieldState()
-    val maxLatTextState = rememberTextFieldState()
-    val minLonTextState = rememberTextFieldState()
-    val maxLonTextState = rememberTextFieldState()
+    val minLatTextState =
+        rememberTextFieldState(ConfigHolder.initialBounds?.minLat?.toString() ?: "")
+    val maxLatTextState =
+        rememberTextFieldState(ConfigHolder.initialBounds?.maxLat?.toString() ?: "")
+    val minLonTextState =
+        rememberTextFieldState(ConfigHolder.initialBounds?.minLon?.toString() ?: "")
+    val maxLonTextState =
+        rememberTextFieldState(ConfigHolder.initialBounds?.maxLon?.toString() ?: "")
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -99,8 +103,7 @@ fun InitialBoundsScreen(item: Item, modifier: Modifier = Modifier, onBack: () ->
             maxLonTextState,
             modifier = fillMaxWidth,
             prefixText = "maxLon",
-            enabled
-            = enable,
+            enabled = enable,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Decimal)
         )
     }

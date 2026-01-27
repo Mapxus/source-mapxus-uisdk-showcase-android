@@ -28,10 +28,14 @@ import kotlinx.coroutines.launch
 fun MapBoundsRestrictionScreen(item: Item, modifier: Modifier = Modifier, onBack: () -> Unit) {
     var enable by remember { mutableStateOf(ConfigHolder.mapBoundsRestriction != null) }
 
-    val minLatTextState = rememberTextFieldState()
-    val maxLatTextState = rememberTextFieldState()
-    val minLonTextState = rememberTextFieldState()
-    val maxLonTextState = rememberTextFieldState()
+    val minLatTextState =
+        rememberTextFieldState(ConfigHolder.mapBoundsRestriction?.minLat?.toString() ?: "")
+    val maxLatTextState =
+        rememberTextFieldState(ConfigHolder.mapBoundsRestriction?.maxLat?.toString() ?: "")
+    val minLonTextState =
+        rememberTextFieldState(ConfigHolder.mapBoundsRestriction?.minLon?.toString() ?: "")
+    val maxLonTextState =
+        rememberTextFieldState(ConfigHolder.mapBoundsRestriction?.maxLon?.toString() ?: "")
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
