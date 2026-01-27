@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +40,7 @@ import kotlinx.coroutines.launch
 fun ModuleDrawerFramework(
     modifier: Modifier = Modifier,
     modules: List<Module>,
+    onOpenMap: () -> Unit,
     onItemClicked: (Item) -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -85,6 +88,18 @@ fun ModuleDrawerFramework(
                             .padding(horizontal = 10.dp),
                         onItemClicked = onItemClicked
                     )
+                },
+                floatingActionButton = {
+                    ExtendedFloatingActionButton(
+                        onClick = onOpenMap,
+                        text = { Text("Open Map") },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = null
+                            )
+                        }
+                    )
                 }
             )
         }
@@ -95,5 +110,5 @@ fun ModuleDrawerFramework(
 @Composable
 private fun ModuleDrawerPreview() {
     val modules = listOf(MapBasicModule)
-    ModuleDrawerFramework(modules = modules) {}
+    ModuleDrawerFramework(modules = modules, onOpenMap = {}) {}
 }
