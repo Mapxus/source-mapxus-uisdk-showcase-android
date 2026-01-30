@@ -1,5 +1,6 @@
 package com.mapxus.uisdkshowcase
 
+import com.mapxus.dropin.uicore.api.AppearanceMode
 import com.mapxus.dropin.uicore.api.AttributionConfig
 import com.mapxus.dropin.uicore.api.CopyrightConfig
 import com.mapxus.dropin.uicore.api.DIConfigBuilder
@@ -14,56 +15,59 @@ import com.mapxus.dropin.uicore.api.ShareDisplayMode
 import com.mapxus.dropin.uicore.api.SharedFloorsUnifiedName
 import com.mapxus.dropin.uicore.api.ToolTipsConfig
 import com.mapxus.dropin.uicore.api.VenueAnchorPoiConfig
+import com.mapxus.dropin.uicore.api.model.Bounds
 import com.mapxus.dropin.uicore.api.model.StringsWithLanguage
+import com.mapxus.dropin.uicore.api.theme.DIColors
+import com.mapxus.dropin.uicore.api.theme.DIShapes
 
 object ConfigHolder {
     private val configBuilder = DIConfigBuilder()
 
     fun getConfig() = configBuilder.build()
 
-    var initialBounds
+    var initialBounds: Bounds?
         get() = configBuilder.initialBounds
         set(value) {
             configBuilder.initialBounds = value
         }
 
-    var mapBoundsRestriction
+    var mapBoundsRestriction: Bounds?
         get() = configBuilder.mapBoundsRestriction
         set(value) {
             configBuilder.mapBoundsRestriction = value
         }
 
-    var initialMapBearing
+    var initialMapBearing: Double
         get() = configBuilder.initialMapBearing
         set(value) {
             configBuilder.initialMapBearing = value
         }
 
-    var mapStyle
+    var mapStyle: String
         get() = configBuilder.mapStyle
         set(value) {
             configBuilder.mapStyle = value
         }
 
-    var appearanceMode
+    var appearanceMode: AppearanceMode
         get() = configBuilder.appearanceMode
         set(value) {
             configBuilder.appearanceMode = value
         }
 
-    var colors
+    var colors: DIColors?
         get() = configBuilder.colors
         set(value) {
             configBuilder.colors = value
         }
 
-    var shapes
+    var shapes: DIShapes
         get() = configBuilder.shapes
         set(value) {
             configBuilder.shapes = value
         }
 
-    var materialResourcePath
+    var materialResourcePath: String
         get() = configBuilder.materialResourcePath
         set(value) {
             configBuilder.materialResourcePath = value

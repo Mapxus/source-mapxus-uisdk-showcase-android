@@ -1,20 +1,160 @@
 package com.mapxus.uisdkshowcase.ui.screen
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mapxus.dropin.uicore.api.Language
+import com.mapxus.uisdkshowcase.ConfigHolder
 import com.mapxus.uisdkshowcase.model.item.Item
+import com.mapxus.uisdkshowcase.model.item.SettingsLanguageOptions
 import com.mapxus.uisdkshowcase.ui.component.ItemDetailFramework
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsLanguageOptionsScreen(item: Item, onBack: () -> Unit) {
+    val currentOptions = remember {
+        mutableStateListOf(*(ConfigHolder.settingsLanguageOptions ?: emptyList()).toTypedArray())
+    }
+    var showDialog by remember { mutableStateOf(false) }
+    var selectedLanguageInDialog by remember { mutableStateOf<Language?>(null) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Add Language Option") },
+            text = {
+                val allLanguages = Language.entries
+                LazyColumn {
+                    items(allLanguages) { language ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedLanguageInDialog = language }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            RadioButton(
+                                selected = selectedLanguageInDialog == language,
+                                onClick = { selectedLanguageInDialog = language }
+                            )
+                            Text(text = language.name, modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    selectedLanguageInDialog?.let { language ->
+                        if (!currentOptions.contains(language)) {
+                            currentOptions.add(language)
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("${language.name} has already been added.")
+                            }
+                        }
+                        showDialog = false
+                        selectedLanguageInDialog = null
+                    }
+                }) {
+                    Text("Add")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                    selectedLanguageInDialog = null
+                }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
     ItemDetailFramework(
         item = item,
         onBack = onBack,
-        onSaveClicked = { /* TODO */ }
+        snackbarHostState = snackbarHostState,
+        onSaveClicked = {
+            ConfigHolder.settingsLanguageOptions = currentOptions.toList().ifEmpty { null }
+            scope.launch {
+                snackbarHostState.showSnackbar("Settings Language Options saved")
+            }
+        }
     ) {
-        Text("Settings Language Options Configuration", modifier = Modifier.padding(16.dp))
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            currentOptions.forEachIndexed { index, language ->
+                InputChip(
+                    selected = false,
+                    onClick = { },
+                    label = { Text(language.name) },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = { currentOptions.removeAt(index) },
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "Delete",
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+                )
+            }
+            AssistChip(
+                onClick = { showDialog = true },
+                label = { Icon(Icons.Default.Add, contentDescription = "Add") }
+            )
+        }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsLanguageOptionsScreenPreview() {
+    SettingsLanguageOptionsScreen(
+        item = SettingsLanguageOptions,
+        onBack = {}
+    )
 }
