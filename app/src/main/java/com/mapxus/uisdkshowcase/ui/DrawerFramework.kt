@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.mapxus.uisdkshowcase.model.item.Item
 import com.mapxus.uisdkshowcase.model.module.MapBasicModule
 import com.mapxus.uisdkshowcase.model.module.Module
-import com.mapxus.uisdkshowcase.ui.component.ItemViewPager
+import com.mapxus.uisdkshowcase.ui.component.ItemGridView
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +81,7 @@ fun ModuleDrawerFramework(
                     )
                 },
                 content = { innerPadding ->
-                    ItemViewPager(
+                    ItemGridView(
                         items = modules[currentModuleIndex].items,
                         modifier = Modifier
                             .padding(innerPadding)
