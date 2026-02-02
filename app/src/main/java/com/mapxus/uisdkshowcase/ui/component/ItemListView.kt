@@ -17,7 +17,7 @@ import com.mapxus.uisdkshowcase.model.item.Shapes
 import com.mapxus.uisdkshowcase.ui.theme.UISDKShowcaseTheme
 
 @Composable
-fun ItemGridView(items: List<Item>, modifier: Modifier = Modifier, onItemClicked: (Item) -> Unit) {
+fun ItemListView(items: List<Item>, modifier: Modifier = Modifier, onItemClicked: (Item) -> Unit) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -37,14 +37,14 @@ fun ItemGridView(items: List<Item>, modifier: Modifier = Modifier, onItemClicked
 
 @Preview(showBackground = true)
 @Composable
-fun ItemGridViewPreview() {
+fun ItemListViewPreview() {
     UISDKShowcaseTheme {
         val sampleItems = listOf(
             AppearanceMode,
             Colors,
             Shapes
         )
-        ItemGridView(
+        ItemListView(
             items = sampleItems,
             onItemClicked = {}
         )

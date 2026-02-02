@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.mapxus.uisdkshowcase.model.item.Item
 import com.mapxus.uisdkshowcase.model.module.MapBasicModule
 import com.mapxus.uisdkshowcase.model.module.Module
-import com.mapxus.uisdkshowcase.ui.component.ItemGridView
+import com.mapxus.uisdkshowcase.ui.component.ItemListView
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,13 +81,21 @@ fun ModuleDrawerFramework(
                     )
                 },
                 content = { innerPadding ->
-                    ItemGridView(
-                        items = modules[currentModuleIndex].items,
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .padding(horizontal = 10.dp),
-                        onItemClicked = onItemClicked
-                    )
+                    val module = modules[currentModuleIndex]
+                    val items = module.items
+                    val modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(horizontal = 10.dp)
+                    if (items == null) {
+                        module.DetailScreen(modifier)
+                    } else {
+                        ItemListView(
+                            items = items,
+                            modifier = modifier,
+                            onItemClicked = onItemClicked
+                        )
+                    }
+
                 },
                 floatingActionButton = {
                     ExtendedFloatingActionButton(

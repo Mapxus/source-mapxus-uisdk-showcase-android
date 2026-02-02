@@ -20,8 +20,6 @@ import com.mapxus.uisdkshowcase.model.item.InitialBounds
 import com.mapxus.uisdkshowcase.model.item.InitialMapBearing
 import com.mapxus.uisdkshowcase.model.item.IsBuildingListVisible
 import com.mapxus.uisdkshowcase.model.item.IsLegalLinksVisible
-import com.mapxus.uisdkshowcase.model.item.IsShoplusButtonVisible
-import com.mapxus.uisdkshowcase.model.item.IsVenueBackButtonVisible
 import com.mapxus.uisdkshowcase.model.item.Item
 import com.mapxus.uisdkshowcase.model.item.Language
 import com.mapxus.uisdkshowcase.model.item.MapBoundsRestriction
@@ -41,7 +39,6 @@ import com.mapxus.uisdkshowcase.model.item.RecommendedPoiIds
 import com.mapxus.uisdkshowcase.model.item.SendLogButtonTitle
 import com.mapxus.uisdkshowcase.model.item.SettingsLanguageOptions
 import com.mapxus.uisdkshowcase.model.item.Shapes
-import com.mapxus.uisdkshowcase.model.item.ShareDisplayMode
 import com.mapxus.uisdkshowcase.model.item.SharedFloorsUnifiedNames
 import com.mapxus.uisdkshowcase.model.item.ToolTipsConfig
 import com.mapxus.uisdkshowcase.model.item.VenueAnchorPoiConfigs
@@ -105,10 +102,5 @@ fun Item.Screen(onBack: () -> Unit) {
         CopyrightConfig -> CopyrightConfigScreen(this, onBack = onBack)
         AttributionConfig -> AttributionConfigScreen(this, onBack = onBack)
         IsLegalLinksVisible -> IsLegalLinksVisibleScreen(this, onBack = onBack)
-
-        // Component and Behavior Configuration
-        IsShoplusButtonVisible -> IsShoplusButtonVisibleScreen(this, onBack = onBack)
-        IsVenueBackButtonVisible -> IsVenueBackButtonVisibleScreen(this, onBack = onBack)
-        ShareDisplayMode -> ShareDisplayModeScreen(this, onBack = onBack)
     }
 }
