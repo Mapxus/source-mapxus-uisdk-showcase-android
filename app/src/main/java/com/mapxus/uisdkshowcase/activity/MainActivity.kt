@@ -18,6 +18,7 @@ import com.mapxus.uisdkshowcase.model.module.MapBasicModule
 import com.mapxus.uisdkshowcase.model.module.Module
 import com.mapxus.uisdkshowcase.model.module.NavigationModule
 import com.mapxus.uisdkshowcase.model.module.PoiConfigModule
+import com.mapxus.uisdkshowcase.model.module.RoutePathsModule
 import com.mapxus.uisdkshowcase.model.module.SearchAndFilteringModule
 import com.mapxus.uisdkshowcase.model.module.VenueConfigModule
 import com.mapxus.uisdkshowcase.ui.ModuleDrawerFramework
@@ -36,7 +37,8 @@ class MainActivity : ComponentActivity() {
         LanguageModule,
         SearchAndFilteringModule,
         LegalAndAttributionModule,
-        ComponentAndBehaviorModule
+        ComponentAndBehaviorModule,
+        RoutePathsModule
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

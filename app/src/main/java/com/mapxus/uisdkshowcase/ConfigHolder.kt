@@ -19,6 +19,8 @@ import com.mapxus.dropin.uicore.api.model.Bounds
 import com.mapxus.dropin.uicore.api.model.StringsWithLanguage
 import com.mapxus.dropin.uicore.api.theme.DIColors
 import com.mapxus.dropin.uicore.api.theme.DIShapes
+import com.mapxus.dropin.uicore.navi.AppRoute
+import com.mapxus.dropin.uicore.navi.LandingPageRoute
 
 object ConfigHolder {
     private val configBuilder = DIConfigBuilder()
@@ -299,4 +301,6 @@ object ConfigHolder {
         set(value) {
             configBuilder.shareDisplayMode = value
         }
+
+    var appRoute: AppRoute = LandingPageRoute()
 }
