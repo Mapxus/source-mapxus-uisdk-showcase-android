@@ -303,4 +303,19 @@ object ConfigHolder {
         }
 
     var appRoute: AppRoute = LandingPageRoute()
+
+    var isSetToolTipsListener: Boolean = false
+    var isSetLandingPageEventListener: Boolean = false
+    var isSetVenueEventListener: Boolean = false
+    var isSetBuildingEventListener: Boolean = false
+    var isSetPoiEventListener: Boolean = false
+    var isSetCategorySearchEventListener: Boolean = false
+    var isSetEventListener: Boolean = false
+    var isSetKeywordSearchEventListener: Boolean = false
+    var isSetMapEventListener: Boolean = false
+    var isSetNavigationEventListener: Boolean = false
+    var isSetRoutePlanningEventListener: Boolean = false
+    var isSetShareEventListener: Boolean = false
+    var isSetMenuEventListener: Boolean = false
+    var isSetDataTrackingListener: Boolean = false
 }

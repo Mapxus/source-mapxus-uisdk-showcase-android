@@ -14,6 +14,7 @@ import com.mapxus.uisdkshowcase.model.module.AppearanceModule
 import com.mapxus.uisdkshowcase.model.module.ComponentAndBehaviorModule
 import com.mapxus.uisdkshowcase.model.module.LanguageModule
 import com.mapxus.uisdkshowcase.model.module.LegalAndAttributionModule
+import com.mapxus.uisdkshowcase.model.module.ListenerModule
 import com.mapxus.uisdkshowcase.model.module.MapBasicModule
 import com.mapxus.uisdkshowcase.model.module.Module
 import com.mapxus.uisdkshowcase.model.module.NavigationModule
@@ -38,7 +39,8 @@ class MainActivity : ComponentActivity() {
         SearchAndFilteringModule,
         LegalAndAttributionModule,
         ComponentAndBehaviorModule,
-        RoutePathsModule
+        RoutePathsModule,
+        ListenerModule
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
