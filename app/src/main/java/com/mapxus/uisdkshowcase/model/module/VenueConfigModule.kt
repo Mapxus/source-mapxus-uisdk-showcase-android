@@ -1,7 +1,6 @@
 package com.mapxus.uisdkshowcase.model.module
 
 import com.mapxus.uisdkshowcase.model.item.BuildingSectionTitle
-import com.mapxus.uisdkshowcase.model.item.FloorSelectorCategories
 import com.mapxus.uisdkshowcase.model.item.IsBuildingListVisible
 import com.mapxus.uisdkshowcase.model.item.Item
 import com.mapxus.uisdkshowcase.model.item.SharedFloorsUnifiedNames
@@ -15,7 +14,7 @@ object VenueConfigModule : Module {
         IsBuildingListVisible,
         BuildingSectionTitle,
         VenueHighlightedShopTitle,
-        FloorSelectorCategories,
+//        FloorSelectorCategories,
         VenueDefaultSharedFloorIds,
         SharedFloorsUnifiedNames,
         VenueAnchorPoiConfigs
