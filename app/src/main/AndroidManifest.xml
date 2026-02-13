@@ -27,6 +27,11 @@
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.UISDKShowcase" />
+        <activity
+            android:name=".activity.DataSearchActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.UISDKShowcase" />
     </application>
 
 </manifest>

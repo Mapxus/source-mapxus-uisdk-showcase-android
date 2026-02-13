@@ -47,16 +47,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainContent(modules = modules) {
-                val intent = Intent(this@MainActivity, MapActivity::class.java)
-                startActivity(intent)
-            }
+            MainContent(
+                modules = modules,
+                onOpenMap = {
+                    val intent = Intent(this@MainActivity, MapActivity::class.java)
+                    startActivity(intent)
+                },
+                onOpenDataSearch = {
+                    val intent = Intent(this@MainActivity, DataSearchActivity::class.java)
+                    startActivity(intent)
+                }
+            )
         }
     }
 }
 
 @Composable
-private fun MainContent(modules: List<Module>, onOpenMap: () -> Unit) {
+private fun MainContent(
+    modules: List<Module>,
+    onOpenMap: () -> Unit,
+    onOpenDataSearch: () -> Unit
+) {
     UISDKShowcaseTheme {
         val backStack = rememberNavBackStack(ModuleSelecting)
         NavDisplay(
@@ -71,7 +82,8 @@ private fun MainContent(modules: List<Module>, onOpenMap: () -> Unit) {
                     ModuleDrawerFramework(
                         modifier = Modifier,
                         modules = modules,
-                        onOpenMap = onOpenMap
+                        onOpenMap = onOpenMap,
+                        onOpenDataSearch = onOpenDataSearch
                     ) { item ->
                         backStack.add(ItemDetail(item))
                     }

@@ -19,6 +19,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ fun ModuleDrawerFramework(
     modifier: Modifier = Modifier,
     modules: List<Module>,
     onOpenMap: () -> Unit,
+    onOpenDataSearch: () -> Unit,
     onItemClicked: (Item) -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -76,6 +78,11 @@ fun ModuleDrawerFramework(
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+                            }
+                        },
+                        actions = {
+                            TextButton(onOpenDataSearch) {
+                                Text("Search")
                             }
                         }
                     )
@@ -118,5 +125,5 @@ fun ModuleDrawerFramework(
 @Composable
 private fun ModuleDrawerPreview() {
     val modules = listOf(MapBasicModule)
-    ModuleDrawerFramework(modules = modules, onOpenMap = {}) {}
+    ModuleDrawerFramework(modules = modules, onOpenMap = {}, onOpenDataSearch = {}) {}
 }
