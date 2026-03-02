@@ -1,8 +1,15 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
+
+val secretPropertiesFile: File? = rootProject.file("./secret.properties")
+val secretProperties = Properties()
+secretProperties.load(FileInputStream(secretPropertiesFile))
 
 android {
     namespace = "com.mapxus.uisdkshowcase"
@@ -16,6 +23,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "appid", "\"${secretProperties["appid-prod"] as String}\"")
+        buildConfigField("String", "secret", "\"${secretProperties["secret-prod"] as String}\"")
     }
 
     buildTypes {
@@ -33,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
