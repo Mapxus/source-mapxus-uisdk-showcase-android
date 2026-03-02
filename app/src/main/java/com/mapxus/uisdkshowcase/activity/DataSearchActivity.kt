@@ -33,6 +33,7 @@ import com.mapxus.dropin.uicore.api.model.Bounds
 import com.mapxus.dropin.uicore.api.search.IDataSearcher
 import com.mapxus.uisdkshowcase.ConfigHolder
 import com.mapxus.uisdkshowcase.ui.theme.UISDKShowcaseTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DataSearchActivity : ComponentActivity() {
@@ -88,7 +89,7 @@ private fun DataSearchScreen(
             FlowRow {
                 Button(
                     onClick = {
-                        scope.launch {
+                        scope.launch(Dispatchers.IO) {
                             resultText = searcher.searchVenuesByName("k11").let {
                                 if (it.isEmpty()) searchErrorText
                                 else it.joinToString("\n")
@@ -112,7 +113,7 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
-                        scope.launch {
+                        scope.launch(Dispatchers.IO) {
                             resultText = searcher.searchVenuesByIds(venueIds).let {
                                 if (it.isEmpty()) searchErrorText
                                 else it.joinToString { venue -> venue.venueName + "\n" }
@@ -136,7 +137,7 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
-                        scope.launch {
+                        scope.launch(Dispatchers.IO) {
                             resultText = searcher.searchPoiById("12735072").let {
                                 it?.toString() ?: searchErrorText
                             }
@@ -158,7 +159,7 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
-                        scope.launch {
+                        scope.launch(Dispatchers.IO) {
                             resultText = searcher.searchVenuesNearby(
                                 latitude = 22.294484301562978,
                                 longitude = 114.17415976524353,
@@ -188,7 +189,7 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
-                        scope.launch {
+                        scope.launch(Dispatchers.IO) {
                             resultText = searcher.searchPoiByBounds(
                                 Bounds(
                                     maxLat = 22.294484301562978,
