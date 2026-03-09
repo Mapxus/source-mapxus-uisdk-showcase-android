@@ -74,11 +74,11 @@ fun ColorsScreen(item: Item, modifier: Modifier = Modifier, onBack: () -> Unit) 
         onSaveClicked = {
             // 保存时将各 State 中的值重新封装进 DIColors
             val updatedColors = DIColors(
-                accentColor = accentState.colorInt?.toString(),
-                brandPrimaryColor = brandPrimaryState.colorInt?.toString(),
-                brandSecondaryColor = brandSecondaryState.colorInt?.toString(),
-                primaryContentColor = primaryContentState.colorInt?.toString(),
-                secondaryContentColor = secondaryContentState.colorInt?.toString(),
+                accentColor = accentState.colorInt?.let { formColorString(it) },
+                brandPrimaryColor = brandPrimaryState.colorInt?.let { formColorString(it) },
+                brandSecondaryColor = brandSecondaryState.colorInt?.let { formColorString(it) },
+                primaryContentColor = primaryContentState.colorInt?.let { formColorString(it) },
+                secondaryContentColor = secondaryContentState.colorInt?.let { formColorString(it) },
             )
             ConfigHolder.colors = updatedColors
             scope.launch {
@@ -105,7 +105,7 @@ fun ColorRow(
     val currentColorInt = state.colorInt
     val color = currentColorInt?.let { Color(it) } ?: Color.Gray
     val colorText = if (currentColorInt != null) {
-        "#${Integer.toHexString(color.toArgb()).uppercase()}"
+        formColorString(currentColorInt)
     } else {
         "undefined"
     }
@@ -177,6 +177,12 @@ fun ColorRow(
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
+    }
+}
+
+private fun formColorString(colorInt: Int): String {
+    return colorInt.let {
+        "#${Integer.toHexString(Color(it).toArgb()).substring(2).uppercase()}"
     }
 }
 
