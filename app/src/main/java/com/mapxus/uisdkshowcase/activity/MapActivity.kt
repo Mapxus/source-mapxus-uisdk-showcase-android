@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,7 +44,6 @@ import com.mapxus.dropin.uicore.api.model.LocationInfo
 import com.mapxus.dropin.uicore.api.model.PoiInfo
 import com.mapxus.dropin.uicore.api.model.VenueInfo
 import com.mapxus.dropin.uicore.model.NavigationPoint
-import com.mapxus.dropin.uicore.navi.LandingPageRoute
 import com.mapxus.uisdkshowcase.ConfigHolder
 import com.mapxus.uisdkshowcase.ui.theme.UISDKShowcaseTheme
 
@@ -88,6 +88,7 @@ class MapActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .statusBarsPadding()
+                        .navigationBarsPadding()
                 ) {
                     if (hasLocationPermission) {
                         AndroidView(
@@ -96,7 +97,7 @@ class MapActivity : ComponentActivity() {
                                 if (diView == null) {
                                     diView = diSdk?.getView(it)
                                 }
-                                diSdk?.start(LandingPageRoute())
+                                diSdk?.start(ConfigHolder.appRoute)
                                 diView!!
                             }
                         )

@@ -95,7 +95,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckToolTipsListener,
-                onCheckedChange = { isCheckToolTipsListener = true }
+                onCheckedChange = { isCheckToolTipsListener = it }
             )
             Text(text = "Intercept ToolTips")
         }
@@ -103,7 +103,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckLandingPageEventListener,
-                onCheckedChange = { isCheckLandingPageEventListener = true }
+                onCheckedChange = { isCheckLandingPageEventListener = it }
             )
             Text(text = "Intercept Landing Page")
         }
@@ -111,7 +111,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckVenueEventListener,
-                onCheckedChange = { isCheckVenueEventListener = true }
+                onCheckedChange = { isCheckVenueEventListener = it }
             )
             Text(text = "Intercept Venue")
         }
@@ -119,7 +119,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckBuildingEventListener,
-                onCheckedChange = { isCheckBuildingEventListener = true }
+                onCheckedChange = { isCheckBuildingEventListener = it }
             )
             Text(text = "Intercept Building")
         }
@@ -127,7 +127,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckPoiEventListener,
-                onCheckedChange = { isCheckPoiEventListener = true }
+                onCheckedChange = { isCheckPoiEventListener = it }
             )
             Text(text = "Intercept POI")
         }
@@ -135,7 +135,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckCategorySearchEventListener,
-                onCheckedChange = { isCheckCategorySearchEventListener = true }
+                onCheckedChange = { isCheckCategorySearchEventListener = it }
             )
             Text(text = "Intercept Category Search")
         }
@@ -143,7 +143,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckEventListener,
-                onCheckedChange = { isCheckEventListener = true }
+                onCheckedChange = { isCheckEventListener = it }
             )
             Text(text = "Intercept Event")
         }
@@ -151,7 +151,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckKeywordSearchEventListener,
-                onCheckedChange = { isCheckKeywordSearchEventListener = true }
+                onCheckedChange = { isCheckKeywordSearchEventListener = it }
             )
             Text(text = "Intercept Keyword Search")
         }
@@ -159,7 +159,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckMapEventListener,
-                onCheckedChange = { isCheckMapEventListener = true }
+                onCheckedChange = { isCheckMapEventListener = it }
             )
             Text(text = "Intercept Map")
         }
@@ -167,7 +167,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckNavigationEventListener,
-                onCheckedChange = { isCheckNavigationEventListener = true }
+                onCheckedChange = { isCheckNavigationEventListener = it }
             )
             Text(text = "Intercept Navigation")
         }
@@ -175,7 +175,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckRoutePlanningEventListener,
-                onCheckedChange = { isCheckRoutePlanningEventListener = true }
+                onCheckedChange = { isCheckRoutePlanningEventListener = it }
             )
             Text(text = "Intercept Route Planning")
         }
@@ -183,7 +183,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckShareEventListener,
-                onCheckedChange = { isCheckShareEventListener = true }
+                onCheckedChange = { isCheckShareEventListener = it }
             )
             Text(text = "Intercept Share")
         }
@@ -191,7 +191,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckMenuEventListener,
-                onCheckedChange = { isCheckMenuEventListener = true }
+                onCheckedChange = { isCheckMenuEventListener = it }
             )
             Text(text = "Intercept Menu")
         }
@@ -199,7 +199,7 @@ fun ListenerScreen(modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isCheckDataTrackingListener,
-                onCheckedChange = { isCheckDataTrackingListener = true }
+                onCheckedChange = { isCheckDataTrackingListener = it }
             )
             Text(text = "Intercept Data Tracking")
         }
