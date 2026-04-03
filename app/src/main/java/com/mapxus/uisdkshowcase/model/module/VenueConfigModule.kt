@@ -7,6 +7,7 @@ import com.mapxus.uisdkshowcase.model.item.SharedFloorsUnifiedNames
 import com.mapxus.uisdkshowcase.model.item.VenueAnchorPoiConfigs
 import com.mapxus.uisdkshowcase.model.item.VenueDefaultSharedFloorIds
 import com.mapxus.uisdkshowcase.model.item.VenueHighlightedShopTitle
+import com.mapxus.uisdkshowcase.model.item.VenueLevelFacilityInfoConfigs
 
 object VenueConfigModule : Module {
     override val title: String = "Venue Configuration"
@@ -17,6 +18,7 @@ object VenueConfigModule : Module {
 //        FloorSelectorCategories,
         VenueDefaultSharedFloorIds,
         SharedFloorsUnifiedNames,
-        VenueAnchorPoiConfigs
+        VenueAnchorPoiConfigs,
+        VenueLevelFacilityInfoConfigs
     )
 }

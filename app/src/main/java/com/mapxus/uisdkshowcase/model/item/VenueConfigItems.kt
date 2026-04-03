@@ -43,3 +43,10 @@ object VenueAnchorPoiConfigs : Item {
     override val description: String = "Configure anchor POIs within venues"
     override val photoResInt: Int = R.drawable.ic_launcher_background
 }
+
+object VenueLevelFacilityInfoConfigs : Item {
+    override val title: String = "Venue Level Facility Info Config"
+    override val description: String = "Configure facility info per venue level"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+

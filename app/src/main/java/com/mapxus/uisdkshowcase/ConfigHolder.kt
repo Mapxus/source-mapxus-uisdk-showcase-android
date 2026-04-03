@@ -16,7 +16,10 @@ import com.mapxus.dropin.uicore.api.SharedFloorsUnifiedName
 import com.mapxus.dropin.uicore.api.ToolTipsConfig
 import com.mapxus.dropin.uicore.api.VenueAnchorPoiConfig
 import com.mapxus.dropin.uicore.api.model.Bounds
+import com.mapxus.dropin.uicore.api.model.MapLabelsConfig
 import com.mapxus.dropin.uicore.api.model.StringsWithLanguage
+import com.mapxus.dropin.uicore.api.model.VenueLevelFacilityInfoConfig
+import com.mapxus.dropin.uicore.api.theme.BorderStyle
 import com.mapxus.dropin.uicore.api.theme.DIColors
 import com.mapxus.dropin.uicore.api.theme.DIShapes
 import com.mapxus.dropin.uicore.navi.AppRoute
@@ -45,10 +48,28 @@ object ConfigHolder {
             configBuilder.initialMapBearing = value
         }
 
+    var initialMapPitch: Double
+        get() = configBuilder.initialMapPitch
+        set(value) {
+            configBuilder.initialMapPitch = value
+        }
+
+    var selectedBuildingBorderStyle: BorderStyle?
+        get() = configBuilder.selectedBuildingBorderStyle
+        set(value) {
+            configBuilder.selectedBuildingBorderStyle = value
+        }
+
     var mapStyle: String
         get() = configBuilder.mapStyle
         set(value) {
             configBuilder.mapStyle = value
+        }
+
+    var mapStyleDark: String
+        get() = configBuilder.mapStyleDark
+        set(value) {
+            configBuilder.mapStyleDark = value
         }
 
     var appearanceMode: AppearanceMode
@@ -151,6 +172,12 @@ object ConfigHolder {
         get() = configBuilder.venueAnchorPoiConfigs
         set(value) {
             configBuilder.venueAnchorPoiConfigs = value
+        }
+
+    var venueLevelFacilityInfoConfig: List<VenueLevelFacilityInfoConfig>?
+        get() = configBuilder.venueLevelFacilityInfoConfig
+        set(value) {
+            configBuilder.venueLevelFacilityInfoConfig = value
         }
 
     // Navigation Configuration
@@ -300,6 +327,12 @@ object ConfigHolder {
         get() = configBuilder.shareDisplayMode
         set(value) {
             configBuilder.shareDisplayMode = value
+        }
+
+    var mapLabelsConfig: MapLabelsConfig?
+        get() = configBuilder.mapLabelsConfig
+        set(value) {
+            configBuilder.mapLabelsConfig = value
         }
 
     var appRoute: AppRoute = LandingPageRoute()

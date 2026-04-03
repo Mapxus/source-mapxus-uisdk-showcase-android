@@ -18,12 +18,14 @@ import com.mapxus.uisdkshowcase.model.item.GlobalFilterTagIds
 import com.mapxus.uisdkshowcase.model.item.GpsModeDisplayName
 import com.mapxus.uisdkshowcase.model.item.InitialBounds
 import com.mapxus.uisdkshowcase.model.item.InitialMapBearing
+import com.mapxus.uisdkshowcase.model.item.InitialMapPitch
 import com.mapxus.uisdkshowcase.model.item.IsBuildingListVisible
 import com.mapxus.uisdkshowcase.model.item.IsLegalLinksVisible
 import com.mapxus.uisdkshowcase.model.item.Item
 import com.mapxus.uisdkshowcase.model.item.Language
 import com.mapxus.uisdkshowcase.model.item.MapBoundsRestriction
 import com.mapxus.uisdkshowcase.model.item.MapStyle
+import com.mapxus.uisdkshowcase.model.item.MapStyleDark
 import com.mapxus.uisdkshowcase.model.item.MaterialResourcePath
 import com.mapxus.uisdkshowcase.model.item.MaximumRoutePlanningDistance
 import com.mapxus.uisdkshowcase.model.item.NavigationModes
@@ -36,6 +38,7 @@ import com.mapxus.uisdkshowcase.model.item.PublicHolidayDisplayName
 import com.mapxus.uisdkshowcase.model.item.PublicTransportModes
 import com.mapxus.uisdkshowcase.model.item.RecommendedCategories
 import com.mapxus.uisdkshowcase.model.item.RecommendedPoiIds
+import com.mapxus.uisdkshowcase.model.item.SelectedBuildingBorderStyle
 import com.mapxus.uisdkshowcase.model.item.SendLogButtonTitle
 import com.mapxus.uisdkshowcase.model.item.SettingsLanguageOptions
 import com.mapxus.uisdkshowcase.model.item.Shapes
@@ -44,6 +47,7 @@ import com.mapxus.uisdkshowcase.model.item.ToolTipsConfig
 import com.mapxus.uisdkshowcase.model.item.VenueAnchorPoiConfigs
 import com.mapxus.uisdkshowcase.model.item.VenueDefaultSharedFloorIds
 import com.mapxus.uisdkshowcase.model.item.VenueHighlightedShopTitle
+import com.mapxus.uisdkshowcase.model.item.VenueLevelFacilityInfoConfigs
 
 @Composable
 fun Item.Screen(onBack: () -> Unit) {
@@ -52,6 +56,9 @@ fun Item.Screen(onBack: () -> Unit) {
         MapBoundsRestriction -> MapBoundsRestrictionScreen(this, onBack = onBack)
         InitialMapBearing -> InitialMapBearingScreen(this, onBack = onBack)
         MapStyle -> MapStyleScreen(this, onBack = onBack)
+        MapStyleDark -> MapStyleDarkScreen(this, onBack = onBack)
+        InitialMapPitch -> InitialMapPitchScreen(this, onBack = onBack)
+        SelectedBuildingBorderStyle -> SelectedBuildingBorderStyleScreen(this, onBack = onBack)
         AppearanceMode -> AppearanceModeScreen(this, onBack = onBack)
         Colors -> ColorsScreen(this, onBack = onBack)
         Shapes -> ShapesScreen(this, onBack = onBack)
@@ -73,6 +80,7 @@ fun Item.Screen(onBack: () -> Unit) {
         VenueDefaultSharedFloorIds -> VenueDefaultSharedFloorIdsScreen(this, onBack = onBack)
         SharedFloorsUnifiedNames -> SharedFloorsUnifiedNamesScreen(this, onBack = onBack)
         VenueAnchorPoiConfigs -> VenueAnchorPoiConfigsScreen(this, onBack = onBack)
+        VenueLevelFacilityInfoConfigs -> VenueLevelFacilityInfoConfigScreen(this, onBack = onBack)
 
         // Navigation Configuration
         NavigationModes -> NavigationModesScreen(this, onBack = onBack)

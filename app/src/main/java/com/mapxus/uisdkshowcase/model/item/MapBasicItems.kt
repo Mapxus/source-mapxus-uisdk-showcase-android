@@ -25,3 +25,22 @@ object InitialMapBearing : Item {
     override val description: String = "Set initial map rotation on launch"
     override val photoResInt: Int = R.drawable.ic_launcher_background
 }
+
+object MapStyleDark : Item {
+    override val title: String = "Map Style Dark"
+    override val description: String = "Configure the dark mode map style"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+
+object InitialMapPitch : Item {
+    override val title: String = "Initial Map Pitch"
+    override val description: String = "Set initial map pitch angle on launch"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+
+object SelectedBuildingBorderStyle : Item {
+    override val title: String = "Selected Building Border Style"
+    override val description: String = "Configure selected building border appearance"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+
