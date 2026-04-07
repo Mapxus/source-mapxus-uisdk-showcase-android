@@ -4,29 +4,40 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.mapxus.dropin.uicore.DISdk
 import com.mapxus.dropin.uicore.api.DIConfig
 import com.mapxus.dropin.uicore.api.model.Bounds
@@ -56,7 +67,79 @@ private const val k11ArtMall = "caab5a38-79e1-11e8-8453-951df499024d"
 private const val taiKwun = "e679b6fc0818456aa1867aa021a3e84a"
 private val venueIds = listOf(leeTungAvenue, mPlusMuseum, k11Musea, k11ArtMall, taiKwun)
 
+private sealed interface DialogState {
+    data object Idle : DialogState
+    data object Loading : DialogState
+    data class Success(val message: String) : DialogState
+    data class Error(val message: String) : DialogState
+}
+
 private const val searchErrorText = "search error!"
+
+@Composable
+private fun ResultDialog(state: DialogState, onDismiss: () -> Unit) {
+    when (state) {
+        is DialogState.Idle -> {}
+        is DialogState.Loading -> {
+            AlertDialog(
+                onDismissRequest = {},
+                confirmButton = {},
+                title = { Text("Searching…") },
+                text = {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            )
+        }
+
+        is DialogState.Success -> {
+            AlertDialog(
+                onDismissRequest = onDismiss,
+                confirmButton = {
+                    TextButton(onClick = onDismiss) { Text("OK") }
+                },
+                icon = {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(36.dp)
+                    )
+                },
+                title = { Text("Success") },
+                text = {
+                    Text(
+                        state.message,
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    )
+                }
+            )
+        }
+
+        is DialogState.Error -> {
+            AlertDialog(
+                onDismissRequest = onDismiss,
+                confirmButton = {
+                    TextButton(onClick = onDismiss) { Text("OK") }
+                },
+                icon = {
+                    Icon(
+                        Icons.Default.Warning,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(36.dp)
+                    )
+                },
+                title = { Text("Error") },
+                text = { Text(state.message) }
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +150,10 @@ private fun DataSearchScreen(
 ) {
     val scope = rememberCoroutineScope()
 
-    var resultText by remember { mutableStateOf("") }
+    var dialogState by remember { mutableStateOf<DialogState>(DialogState.Idle) }
+
+    ResultDialog(state = dialogState, onDismiss = { dialogState = DialogState.Idle })
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -89,11 +175,11 @@ private fun DataSearchScreen(
             FlowRow {
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         scope.launch(Dispatchers.IO) {
-                            resultText = searcher.searchVenuesByName("k11").let {
-                                if (it.isEmpty()) searchErrorText
-                                else it.joinToString("\n")
-                            }
+                            val result = searcher.searchVenuesByName("k11")
+                            dialogState = if (result.isEmpty()) DialogState.Error(searchErrorText)
+                            else DialogState.Success(result.joinToString("\n"))
                         }
                     }
                 ) {
@@ -102,9 +188,10 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         searcher.searchVenuesByName("k11") {
-                            resultText = if (it.isEmpty()) searchErrorText
-                            else it.joinToString("\n")
+                            dialogState = if (it.isEmpty()) DialogState.Error(searchErrorText)
+                            else DialogState.Success(it.joinToString("\n"))
                         }
                     }
                 ) {
@@ -113,11 +200,11 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         scope.launch(Dispatchers.IO) {
-                            resultText = searcher.searchVenuesByIds(venueIds).let {
-                                if (it.isEmpty()) searchErrorText
-                                else it.joinToString { venue -> venue.venueName + "\n" }
-                            }
+                            val result = searcher.searchVenuesByIds(venueIds)
+                            dialogState = if (result.isEmpty()) DialogState.Error(searchErrorText)
+                            else DialogState.Success(result.joinToString { venue -> venue.venueName + "\n" })
                         }
                     }
                 ) {
@@ -126,9 +213,10 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         searcher.searchVenuesByIds(venueIds) {
-                            resultText = if (it.isEmpty()) searchErrorText
-                            else it.joinToString { venue -> venue.venueName + "\n" }
+                            dialogState = if (it.isEmpty()) DialogState.Error(searchErrorText)
+                            else DialogState.Success(it.joinToString { venue -> venue.venueName + "\n" })
                         }
                     }
                 ) {
@@ -137,10 +225,11 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         scope.launch(Dispatchers.IO) {
-                            resultText = searcher.searchPoiById("12735072").let {
-                                it?.toString() ?: searchErrorText
-                            }
+                            val result = searcher.searchPoiById("12735072")
+                            dialogState = if (result == null) DialogState.Error(searchErrorText)
+                            else DialogState.Success(result.toString())
                         }
                     }
                 ) {
@@ -149,8 +238,10 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         searcher.searchPoiById("12735072") {
-                            resultText = it?.toString() ?: searchErrorText
+                            dialogState = if (it == null) DialogState.Error(searchErrorText)
+                            else DialogState.Success(it.toString())
                         }
                     }
                 ) {
@@ -159,14 +250,14 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         scope.launch(Dispatchers.IO) {
-                            resultText = searcher.searchVenuesNearby(
+                            val result = searcher.searchVenuesNearby(
                                 latitude = 22.294484301562978,
                                 longitude = 114.17415976524353,
                                 radius = 10.0
-                            ).let {
-                                "venue nearby count: ${it.size}"
-                            }
+                            )
+                            dialogState = DialogState.Success("venue nearby count: ${result.size}")
                         }
                     }
                 ) {
@@ -175,12 +266,13 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         searcher.searchVenuesNearby(
                             latitude = 22.294484301562978,
                             longitude = 114.17415976524353,
                             radius = 10.0
                         ) {
-                            resultText = "venue nearby count: ${it.size}"
+                            dialogState = DialogState.Success("venue nearby count: ${it.size}")
                         }
                     }
                 ) {
@@ -189,8 +281,9 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         scope.launch(Dispatchers.IO) {
-                            resultText = searcher.searchPoiByBounds(
+                            val result = searcher.searchPoiByBounds(
                                 Bounds(
                                     maxLat = 22.294484301562978,
                                     maxLon = 114.17415976524353,
@@ -198,9 +291,9 @@ private fun DataSearchScreen(
                                     minLon = 114.07415976524353,
                                 ),
                                 ""
-                            ).let {
-                                it?.toString() ?: searchErrorText
-                            }
+                            )
+                            dialogState = if (result == null) DialogState.Error(searchErrorText)
+                            else DialogState.Success(result.toString())
                         }
                     }
                 ) {
@@ -209,6 +302,7 @@ private fun DataSearchScreen(
 
                 Button(
                     onClick = {
+                        dialogState = DialogState.Loading
                         searcher.searchPoiByBounds(
                             Bounds(
                                 maxLat = 22.294484301562978,
@@ -218,15 +312,14 @@ private fun DataSearchScreen(
                             ),
                             ""
                         ) {
-                            resultText = it?.toString() ?: searchErrorText
+                            dialogState = if (it == null) DialogState.Error(searchErrorText)
+                            else DialogState.Success(it.toString())
                         }
                     }
                 ) {
                     Text("Get POI in Bounds asynchronously")
                 }
             }
-
-            Text(resultText)
         }
     }
 }
