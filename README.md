@@ -1,46 +1,48 @@
-# Mapxus UISDK Showcase App Startup
+# Mapxus UISDK Showcase App Setup
 
-本文档说明如何在本地构建并运行该展示项目。
+This document explains how to build and run the showcase project locally.
 
-## 前置要求
+## Prerequisites
 
-- Android Studio（最新稳定版）
-- 已获取有效的 Mapxus `appid` 和 `secret`
+- Android Studio (latest stable release)
+- A valid Mapxus `appid` and `secret`
 
 ---
 
-## 构建步骤
+## Setup Steps
 
-### 步骤一：克隆项目
+### Step 1: Clone the Repository
 
 ```bash
-git clone <仓库地址>
+git clone <repository-url>
 ```
 
-### 步骤二：在根目录创建 `secret.properties` 文件
+### Step 2: Create `secret.properties` in the Project Root
 
-在项目根目录（与 `settings.gradle.kts` 同级）新建一个名为 `secret.properties` 的文件：
+Create a file named `secret.properties` in the project root directory, alongside
+`settings.gradle.kts`.
 
-### 步骤三：填入 appid 与 secret
+### Step 3: Add Your `appid` and `secret`
 
-打开 `secret.properties`，按以下格式填入你的 Mapxus 凭据：
+Open `secret.properties` and add your Mapxus credentials in the following format:
 
 ```properties
 appid-prod=YOUR_APP_ID
 secret-prod=YOUR_SECRET
 ```
 
-> ⚠️ **注意**：`secret.properties` 包含生产密钥，已加入 `.gitignore`，请勿提交到版本控制。
+> ⚠️ **Note**: `secret.properties` contains production credentials and is already included in
+> `.gitignore`. Do not commit it to version control.
 
 ---
 
-## 构建与运行
+## Build and Run
 
-使用 Android Studio 打开项目，或通过命令行构建：
+Open the project in Android Studio, or build it from the command line:
 
 ```bash
-# 构建 Debug APK
+# Build the debug APK
 ./gradlew :app:assembleDebug
 ```
 
-构建成功后，将 APK 安装至设备或模拟器即可运行。
+After the build succeeds, install the APK on a device or emulator to launch the app.
