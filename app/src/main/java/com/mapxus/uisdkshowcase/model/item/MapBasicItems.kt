@@ -44,3 +44,9 @@ object SelectedBuildingBorderStyle : Item {
     override val photoResInt: Int = R.drawable.ic_launcher_background
 }
 
+object FloorSwitchScope : Item {
+    override val title: String = "Floor Switch Scope"
+    override val description: String = "Configure how floor switching scope is applied"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+

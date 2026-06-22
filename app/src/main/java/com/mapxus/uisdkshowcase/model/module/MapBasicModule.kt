@@ -4,6 +4,7 @@ import com.mapxus.uisdkshowcase.model.item.InitialBounds
 import com.mapxus.uisdkshowcase.model.item.InitialMapBearing
 import com.mapxus.uisdkshowcase.model.item.InitialMapPitch
 import com.mapxus.uisdkshowcase.model.item.Item
+import com.mapxus.uisdkshowcase.model.item.FloorSwitchScope
 import com.mapxus.uisdkshowcase.model.item.MapBoundsRestriction
 import com.mapxus.uisdkshowcase.model.item.MapStyle
 import com.mapxus.uisdkshowcase.model.item.MapStyleDark
@@ -19,6 +20,7 @@ object MapBasicModule : Module {
         MapStyleDark,
         InitialMapBearing,
         InitialMapPitch,
-        SelectedBuildingBorderStyle
+        SelectedBuildingBorderStyle,
+        FloorSwitchScope
     )
 }

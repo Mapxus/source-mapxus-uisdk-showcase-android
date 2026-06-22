@@ -1,6 +1,7 @@
 package com.mapxus.uisdkshowcase.model.module
 
 import com.mapxus.uisdkshowcase.model.item.Item
+import com.mapxus.uisdkshowcase.model.item.EnableBearingCalibration
 import com.mapxus.uisdkshowcase.model.item.MaximumRoutePlanningDistance
 import com.mapxus.uisdkshowcase.model.item.NavigationModes
 import com.mapxus.uisdkshowcase.model.item.NavigationRoadSnapStrength
@@ -15,6 +16,7 @@ object NavigationModule : Module {
         PublicTransportModes,
         MaximumRoutePlanningDistance,
         NavigationRoadSnapStrength,
+        EnableBearingCalibration,
 //        NoRouteAvailableTitle,
         NoRouteAvailableMessage
     )

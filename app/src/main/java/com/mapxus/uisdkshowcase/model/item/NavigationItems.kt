@@ -37,3 +37,10 @@ object NoRouteAvailableMessage : Item {
     override val description: String = "Configure message when no route is available"
     override val photoResInt: Int = R.drawable.ic_launcher_background
 }
+
+object EnableBearingCalibration : Item {
+    override val title: String = "Enable Bearing Calibration"
+    override val description: String = "Toggle compass bearing calibration support during navigation"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+

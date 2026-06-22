@@ -10,7 +10,9 @@ import com.mapxus.uisdkshowcase.model.item.Colors
 import com.mapxus.uisdkshowcase.model.item.CopyrightConfig
 import com.mapxus.uisdkshowcase.model.item.EventModuleTitle
 import com.mapxus.uisdkshowcase.model.item.EventOverviewTitle
+import com.mapxus.uisdkshowcase.model.item.EnableBearingCalibration
 import com.mapxus.uisdkshowcase.model.item.FilterChipsConfig
+import com.mapxus.uisdkshowcase.model.item.FloorSwitchScope
 import com.mapxus.uisdkshowcase.model.item.FixedDisplayCategories
 import com.mapxus.uisdkshowcase.model.item.FloorSelectorCategories
 import com.mapxus.uisdkshowcase.model.item.GlobalFilterModes
@@ -59,6 +61,7 @@ fun Item.Screen(onBack: () -> Unit) {
         MapStyleDark -> MapStyleDarkScreen(this, onBack = onBack)
         InitialMapPitch -> InitialMapPitchScreen(this, onBack = onBack)
         SelectedBuildingBorderStyle -> SelectedBuildingBorderStyleScreen(this, onBack = onBack)
+        FloorSwitchScope -> FloorSwitchScopeScreen(this, onBack = onBack)
         AppearanceMode -> AppearanceModeScreen(this, onBack = onBack)
         Colors -> ColorsScreen(this, onBack = onBack)
         Shapes -> ShapesScreen(this, onBack = onBack)
@@ -87,6 +90,7 @@ fun Item.Screen(onBack: () -> Unit) {
         PublicTransportModes -> PublicTransportModesScreen(this, onBack = onBack)
         MaximumRoutePlanningDistance -> MaximumRoutePlanningDistanceScreen(this, onBack = onBack)
         NavigationRoadSnapStrength -> NavigationRoadSnapStrengthScreen(this, onBack = onBack)
+        EnableBearingCalibration -> EnableBearingCalibrationScreen(this, onBack = onBack)
         NoRouteAvailableTitle -> NoRouteAvailableTitleScreen(this, onBack = onBack)
         NoRouteAvailableMessage -> NoRouteAvailableMessageScreen(this, onBack = onBack)
 

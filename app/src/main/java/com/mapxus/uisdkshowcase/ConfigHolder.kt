@@ -5,6 +5,7 @@ import com.mapxus.dropin.uicore.api.AttributionConfig
 import com.mapxus.dropin.uicore.api.CopyrightConfig
 import com.mapxus.dropin.uicore.api.DIConfigBuilder
 import com.mapxus.dropin.uicore.api.FilterChipsConfig
+import com.mapxus.dropin.uicore.api.FloorSwitchScope
 import com.mapxus.dropin.uicore.api.GlobalFilterMode
 import com.mapxus.dropin.uicore.api.Language
 import com.mapxus.dropin.uicore.api.NavigationMode
@@ -58,6 +59,12 @@ object ConfigHolder {
         get() = configBuilder.selectedBuildingBorderStyle
         set(value) {
             configBuilder.selectedBuildingBorderStyle = value
+        }
+
+    var floorSwitchScope: FloorSwitchScope
+        get() = configBuilder.floorSwitchScope
+        set(value) {
+            configBuilder.floorSwitchScope = value
         }
 
     var mapStyle: String
@@ -203,6 +210,12 @@ object ConfigHolder {
         get() = configBuilder.navigationRoadSnapStrength
         set(value) {
             configBuilder.navigationRoadSnapStrength = value
+        }
+
+    var enableBearingCalibration: Boolean
+        get() = configBuilder.enableBearingCalibration
+        set(value) {
+            configBuilder.enableBearingCalibration = value
         }
 
     var noRouteAvailableTitle: StringsWithLanguage?

@@ -51,7 +51,7 @@ class MapActivity : ComponentActivity() {
     private var diSdk: DISdk? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         diSdk = DISdk(ConfigHolder.getConfig()).apply { configListener() }
         setContent {
             UISDKShowcaseTheme {
