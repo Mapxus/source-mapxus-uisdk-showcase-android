@@ -42,6 +42,7 @@ private enum class VisibilityOverrideOption(val value: Boolean?, val label: Stri
 fun ComponentAndBehaviorScreen(modifier: Modifier = Modifier) {
     var isShoplusButtonVisible by remember { mutableStateOf(ConfigHolder.isShoplusButtonVisible) }
     var isVenueBackButtonVisible by remember { mutableStateOf(ConfigHolder.isVenueBackButtonVisible) }
+    var enableVisualMap by remember { mutableStateOf(ConfigHolder.enableVisualMap) }
     var shareDisplayMode by remember { mutableStateOf(ConfigHolder.shareDisplayMode) }
 
     // Map Labels Config state
@@ -63,6 +64,10 @@ fun ComponentAndBehaviorScreen(modifier: Modifier = Modifier) {
 
     LaunchedEffect(isVenueBackButtonVisible) {
         ConfigHolder.isVenueBackButtonVisible = isVenueBackButtonVisible
+    }
+
+    LaunchedEffect(enableVisualMap) {
+        ConfigHolder.enableVisualMap = enableVisualMap
     }
 
     LaunchedEffect(shareDisplayMode) {
@@ -96,6 +101,14 @@ fun ComponentAndBehaviorScreen(modifier: Modifier = Modifier) {
                 onCheckedChange = { isVenueBackButtonVisible = it }
             )
             Text(text = "Is Venue Back Button Visible")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = enableVisualMap,
+                onCheckedChange = { enableVisualMap = it }
+            )
+            Text(text = "Enable Visual Map")
         }
 
         Text(

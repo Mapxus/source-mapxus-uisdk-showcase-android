@@ -348,6 +348,12 @@ object ConfigHolder {
             configBuilder.mapLabelsConfig = value
         }
 
+    var enableVisualMap: Boolean
+        get() = configBuilder.enableVisualMap
+        set(value) {
+            configBuilder.enableVisualMap = value
+        }
+
     var appRoute: AppRoute = LandingPageRoute()
 
     var isSetToolTipsListener: Boolean = false
