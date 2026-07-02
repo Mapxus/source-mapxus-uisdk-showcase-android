@@ -18,6 +18,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         maven {
             name = "Mapxus Drop In UI Repository"
             url = URI("https://nexus3.mapxus.com/repository/dropin-ui-android")
