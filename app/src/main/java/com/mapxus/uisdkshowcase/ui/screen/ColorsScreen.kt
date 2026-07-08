@@ -44,7 +44,7 @@ import com.mapxus.uisdkshowcase.ui.component.ItemDetailFramework
 import kotlinx.coroutines.launch
 
 /**
- * 封装颜色状态的类
+ * Color wrapper
  */
 class ColorState(initialColorInt: Int?) {
     var colorInt by mutableStateOf(initialColorInt)
@@ -55,10 +55,10 @@ fun ColorsScreen(item: Item, modifier: Modifier = Modifier, onBack: () -> Unit) 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    // 获取初始配置
+    // get the initial colors
     val initialColors = remember { ConfigHolder.colors ?: DIColors() }
 
-    // 为每一个颜色项声明对应的 ColorState
+    // Create ColorState for each color property
     val accentState = remember { ColorState(initialColors.accentColor?.toInt()) }
     val brandPrimaryState = remember { ColorState(initialColors.brandPrimaryColor?.toInt()) }
     val brandSecondaryState = remember { ColorState(initialColors.brandSecondaryColor?.toInt()) }
@@ -72,7 +72,7 @@ fun ColorsScreen(item: Item, modifier: Modifier = Modifier, onBack: () -> Unit) 
         onBack = onBack,
         snackbarHostState = snackbarHostState,
         onSaveClicked = {
-            // 保存时将各 State 中的值重新封装进 DIColors
+            // Update the ConfigHolder with the new colors
             val updatedColors = DIColors(
                 accentColor = accentState.colorInt?.let { formColorString(it) },
                 brandPrimaryColor = brandPrimaryState.colorInt?.let { formColorString(it) },
@@ -101,7 +101,6 @@ fun ColorRow(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // 使用 state 中的当前颜色进行显示
     val currentColorInt = state.colorInt
     val color = currentColorInt?.let { Color(it) } ?: Color.Gray
     val colorText = if (currentColorInt != null) {
@@ -169,7 +168,7 @@ fun ColorRow(
                     initialColor = color,
                     onColorChanged = { colorEnvelope ->
                         if (colorEnvelope.fromUser) {
-                            // 颜色选择器的结果直接应用到 state 中
+                            // Update the state with the new color
                             state.colorInt = colorEnvelope.color.toArgb()
                         }
                     }

@@ -35,7 +35,7 @@ import com.mapxus.uisdkshowcase.ui.component.ItemDetailFramework
 import kotlinx.coroutines.launch
 
 /**
- * 封装形状状态的类
+ * Shape wrapper
  */
 class ShapeState(initialValue: Double?) {
     var value by mutableStateOf(initialValue)
@@ -46,10 +46,10 @@ fun ShapesScreen(item: Item, modifier: Modifier = Modifier, onBack: () -> Unit) 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    // 从 ConfigHolder 获取初始配置，如果为空则创建一个默认的
+    // get the initial shapes
     val initialShapes = remember { ConfigHolder.shapes }
 
-    // 为每一个形状项声明对应的 ShapeState
+    // create a ShapeState for each shape property
     val buttonState = remember { ShapeState(initialShapes.buttonShapeCornerSize) }
     val popupCardState = remember { ShapeState(initialShapes.popupCardShapeCornerSize) }
     val bottomSheetState = remember { ShapeState(initialShapes.bottomSheetShapeCornerSize) }
@@ -62,7 +62,7 @@ fun ShapesScreen(item: Item, modifier: Modifier = Modifier, onBack: () -> Unit) 
         onBack = onBack,
         snackbarHostState = snackbarHostState,
         onSaveClicked = {
-            // 使用 copy 方法创建新的 Shapes 对象
+            // Update the shapes in ConfigHolder with the new values
             var updatedShapes = initialShapes
 
             buttonState.value?.let {
