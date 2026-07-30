@@ -2,6 +2,7 @@ package com.mapxus.uisdkshowcase.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.mapxus.dropin.uicore.navi.BuildingDetailRoute
+import com.mapxus.dropin.uicore.navi.EventDetailRoute
+import com.mapxus.dropin.uicore.navi.PoiDetailRoute
+import com.mapxus.dropin.uicore.navi.VenueDetailRoute
+import com.mapxus.uisdkshowcase.ConfigHolder
 import com.mapxus.uisdkshowcase.model.module.AppearanceModule
 import com.mapxus.uisdkshowcase.model.module.ComponentAndBehaviorModule
 import com.mapxus.uisdkshowcase.model.module.LanguageModule
@@ -50,8 +56,14 @@ class MainActivity : ComponentActivity() {
             MainContent(
                 modules = modules,
                 onOpenMap = {
-                    val intent = Intent(this@MainActivity, MapActivity::class.java)
-                    startActivity(intent)
+                    val routeErrorMessage = checkRouteValidation()
+                    if (routeErrorMessage != null) {
+                        Toast.makeText(this@MainActivity, routeErrorMessage, Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        val intent = Intent(this@MainActivity, MapActivity::class.java)
+                        startActivity(intent)
+                    }
                 },
                 onOpenDataSearch = {
                     val intent = Intent(this@MainActivity, DataSearchActivity::class.java)
@@ -93,5 +105,31 @@ private fun MainContent(
                 }
             }
         )
+    }
+}
+
+fun checkRouteValidation(): String? = with(ConfigHolder) {
+    when (appRoute) {
+        is VenueDetailRoute -> {
+            if (routeVenueId.isBlank()) "Venue Page requires Venue Id"
+            else null
+        }
+
+        is BuildingDetailRoute -> {
+            if (routeBuildingId.isBlank()) "Building Page requires Building Id"
+            else null
+        }
+
+        is PoiDetailRoute -> {
+            if (routePoiId.isBlank()) "POI Page requires POI Id"
+            else null
+        }
+
+        is EventDetailRoute -> {
+            if (routeEventId.isBlank()) "Event Page requires Event Id"
+            else null
+        }
+
+        else -> null
     }
 }

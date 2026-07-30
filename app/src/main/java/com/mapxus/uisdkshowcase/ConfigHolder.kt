@@ -27,6 +27,18 @@ import com.mapxus.dropin.uicore.navi.AppRoute
 import com.mapxus.dropin.uicore.navi.LandingPageRoute
 
 object ConfigHolder {
+    enum class RouteStartPointType {
+        NONE,
+        CURRENT_LOCATION,
+        GEO,
+    }
+
+    enum class RouteDestinationPointType {
+        NONE,
+        GEO,
+        POI,
+    }
+
     private val configBuilder = DIConfigBuilder()
 
     fun getConfig() = configBuilder.build()
@@ -353,6 +365,22 @@ object ConfigHolder {
         set(value) {
             configBuilder.enableVisualMap = value
         }
+
+    var routeVenueId: String = ""
+    var routeBuildingId: String = ""
+    var routePoiId: String = ""
+    var routeEventId: String = ""
+    var routeNavigationStartPointType: RouteStartPointType = RouteStartPointType.NONE
+    var routeNavigationDestinationPointType: RouteDestinationPointType = RouteDestinationPointType.NONE
+    var routeNavigationStartLatitude: String = ""
+    var routeNavigationStartLongitude: String = ""
+    var routeNavigationStartFloorId: String = ""
+    var routeNavigationStartSharedFloorId: String = ""
+    var routeNavigationDestinationLatitude: String = ""
+    var routeNavigationDestinationLongitude: String = ""
+    var routeNavigationDestinationFloorId: String = ""
+    var routeNavigationDestinationSharedFloorId: String = ""
+    var routeNavigationDestinationPoiId: String = ""
 
     var appRoute: AppRoute = LandingPageRoute()
 
