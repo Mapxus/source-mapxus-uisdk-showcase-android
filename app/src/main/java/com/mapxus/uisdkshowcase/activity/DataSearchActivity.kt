@@ -2,50 +2,52 @@ package com.mapxus.uisdkshowcase.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mapxus.dropin.uicore.DISdk
 import com.mapxus.dropin.uicore.api.DIConfig
 import com.mapxus.dropin.uicore.api.model.Bounds
+import com.mapxus.dropin.uicore.api.model.VenueInfo
 import com.mapxus.dropin.uicore.api.search.IDataSearcher
 import com.mapxus.uisdkshowcase.ConfigHolder
 import com.mapxus.uisdkshowcase.ui.theme.UISDKShowcaseTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DataSearchActivity : ComponentActivity() {
     private val searcher: IDataSearcher by lazy { DISdk(ConfigHolder.getConfig()).getDataSearcher() }
@@ -60,86 +62,56 @@ class DataSearchActivity : ComponentActivity() {
     }
 }
 
-private const val leeTungAvenue = "00752cce7b3d43eb96a72a566fe2f4f3"
-private const val mPlusMuseum = "06d7e41af5154838a8d6ddda7d10cb0a"
-private const val k11Musea = "3cd9b17d-f3f4-4afd-ba34-5e3fad2518a6"
-private const val k11ArtMall = "caab5a38-79e1-11e8-8453-951df499024d"
-private const val taiKwun = "e679b6fc0818456aa1867aa021a3e84a"
-private val venueIds = listOf(leeTungAvenue, mPlusMuseum, k11Musea, k11ArtMall, taiKwun)
+private enum class SearchMode { SYNCHRONOUS, ASYNCHRONOUS }
 
-private sealed interface DialogState {
-    data object Idle : DialogState
-    data object Loading : DialogState
-    data class Success(val message: String) : DialogState
-    data class Error(val message: String) : DialogState
+private enum class SearchType { VENUE_NAME, VENUE_IDS, POI_ID, VENUE_NEARBY, POI_BOUNDS }
+
+private data class SearchItem(
+    val title: String,
+    val type: SearchType,
+    val mode: SearchMode,
+    val fields: List<SearchField>
+)
+
+private data class SearchField(
+    val key: String,
+    val label: String,
+    val keyboardType: KeyboardType = KeyboardType.Text
+)
+
+private sealed interface SearchState {
+    data object Idle : SearchState
+    data object Loading : SearchState
+    data class Success(val message: String) : SearchState
+    data class Error(val message: String) : SearchState
 }
 
-private const val searchErrorText = "search error!"
+private val venueNameField = SearchField("name", "Venue name")
+private val venueIdsField = SearchField("ids", "Venue IDs (comma or newline separated)")
+private val poiIdField = SearchField("id", "POI ID")
+private val latitudeField = SearchField("latitude", "Latitude", KeyboardType.Decimal)
+private val longitudeField = SearchField("longitude", "Longitude", KeyboardType.Decimal)
+private val radiusField = SearchField("radius", "Radius", KeyboardType.Decimal)
+private val maxLatField = SearchField("maxLat", "Maximum latitude", KeyboardType.Decimal)
+private val maxLonField = SearchField("maxLon", "Maximum longitude", KeyboardType.Decimal)
+private val minLatField = SearchField("minLat", "Minimum latitude", KeyboardType.Decimal)
+private val minLonField = SearchField("minLon", "Minimum longitude", KeyboardType.Decimal)
+private val keywordField = SearchField("keyword", "Keyword (optional)")
 
-@Composable
-private fun ResultDialog(state: DialogState, onDismiss: () -> Unit) {
-    when (state) {
-        is DialogState.Idle -> {}
-        is DialogState.Loading -> {
-            AlertDialog(
-                onDismissRequest = {},
-                confirmButton = {},
-                title = { Text("Searching…") },
-                text = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-            )
-        }
+private val searchItems = listOf(
+    SearchItem("Get venue by name synchronously", SearchType.VENUE_NAME, SearchMode.SYNCHRONOUS, listOf(venueNameField)),
+    SearchItem("Get venue by name asynchronously", SearchType.VENUE_NAME, SearchMode.ASYNCHRONOUS, listOf(venueNameField)),
+    SearchItem("Get venue by IDs synchronously", SearchType.VENUE_IDS, SearchMode.SYNCHRONOUS, listOf(venueIdsField)),
+    SearchItem("Get venue by IDs asynchronously", SearchType.VENUE_IDS, SearchMode.ASYNCHRONOUS, listOf(venueIdsField)),
+    SearchItem("Get POI by ID synchronously", SearchType.POI_ID, SearchMode.SYNCHRONOUS, listOf(poiIdField)),
+    SearchItem("Get POI by ID asynchronously", SearchType.POI_ID, SearchMode.ASYNCHRONOUS, listOf(poiIdField)),
+    SearchItem("Get venue nearby synchronously", SearchType.VENUE_NEARBY, SearchMode.SYNCHRONOUS, listOf(latitudeField, longitudeField, radiusField)),
+    SearchItem("Get venue nearby asynchronously", SearchType.VENUE_NEARBY, SearchMode.ASYNCHRONOUS, listOf(latitudeField, longitudeField, radiusField)),
+    SearchItem("Get POI in bounds synchronously", SearchType.POI_BOUNDS, SearchMode.SYNCHRONOUS, listOf(maxLatField, maxLonField, minLatField, minLonField, keywordField)),
+    SearchItem("Get POI in bounds asynchronously", SearchType.POI_BOUNDS, SearchMode.ASYNCHRONOUS, listOf(maxLatField, maxLonField, minLatField, minLonField, keywordField))
+)
 
-        is DialogState.Success -> {
-            AlertDialog(
-                onDismissRequest = onDismiss,
-                confirmButton = {
-                    TextButton(onClick = onDismiss) { Text("OK") }
-                },
-                icon = {
-                    Icon(
-                        Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(36.dp)
-                    )
-                },
-                title = { Text("Success") },
-                text = {
-                    Text(
-                        state.message,
-                        modifier = Modifier.verticalScroll(rememberScrollState())
-                    )
-                }
-            )
-        }
-
-        is DialogState.Error -> {
-            AlertDialog(
-                onDismissRequest = onDismiss,
-                confirmButton = {
-                    TextButton(onClick = onDismiss) { Text("OK") }
-                },
-                icon = {
-                    Icon(
-                        Icons.Default.Warning,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(36.dp)
-                    )
-                },
-                title = { Text("Error") },
-                text = { Text(state.message) }
-            )
-        }
-    }
-}
+private const val searchErrorText = "No result found."
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -148,181 +120,216 @@ private fun DataSearchScreen(
     modifier: Modifier = Modifier,
     onClose: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
+    var selectedItem by remember { mutableStateOf<SearchItem?>(null) }
 
-    var dialogState by remember { mutableStateOf<DialogState>(DialogState.Idle) }
-
-    ResultDialog(state = dialogState, onDismiss = { dialogState = DialogState.Idle })
+    BackHandler(enabled = selectedItem != null) { selectedItem = null }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Data Search") },
+                title = { Text(selectedItem?.title ?: "Data Search") },
                 navigationIcon = {
-                    IconButton(onClose) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
+                    IconButton(onClick = { if (selectedItem == null) onClose() else selectedItem = null }) {
+                        Icon(
+                            if (selectedItem == null) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = if (selectedItem == null) "Close" else "Back"
+                        )
                     }
                 }
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-        ) {
-            FlowRow {
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        scope.launch(Dispatchers.IO) {
-                            val result = searcher.searchVenuesByName("k11")
-                            dialogState = if (result.isEmpty()) DialogState.Error(searchErrorText)
-                            else DialogState.Success(result.joinToString("\n"))
-                        }
-                    }
-                ) {
-                    Text("Get venue by name synchronously")
-                }
+        if (selectedItem == null) {
+            SearchItemList(
+                modifier = Modifier.padding(innerPadding),
+                onItemClick = { selectedItem = it }
+            )
+        } else {
+            SearchDetailScreen(
+                item = selectedItem!!,
+                searcher = searcher,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
+    }
+}
 
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        searcher.searchVenuesByName("k11") {
-                            dialogState = if (it.isEmpty()) DialogState.Error(searchErrorText)
-                            else DialogState.Success(it.joinToString("\n"))
-                        }
-                    }
-                ) {
-                    Text("Get venue by name asynchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        scope.launch(Dispatchers.IO) {
-                            val result = searcher.searchVenuesByIds(venueIds)
-                            dialogState = if (result.isEmpty()) DialogState.Error(searchErrorText)
-                            else DialogState.Success(result.joinToString { venue -> venue.venueName + "\n" })
-                        }
-                    }
-                ) {
-                    Text("Get venue by ids synchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        searcher.searchVenuesByIds(venueIds) {
-                            dialogState = if (it.isEmpty()) DialogState.Error(searchErrorText)
-                            else DialogState.Success(it.joinToString { venue -> venue.venueName + "\n" })
-                        }
-                    }
-                ) {
-                    Text("Get venue by ids asynchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        scope.launch(Dispatchers.IO) {
-                            val result = searcher.searchPoiById("12735072")
-                            dialogState = if (result == null) DialogState.Error(searchErrorText)
-                            else DialogState.Success(result.toString())
-                        }
-                    }
-                ) {
-                    Text("Get POI by id synchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        searcher.searchPoiById("12735072") {
-                            dialogState = if (it == null) DialogState.Error(searchErrorText)
-                            else DialogState.Success(it.toString())
-                        }
-                    }
-                ) {
-                    Text("Get POI by id asynchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        scope.launch(Dispatchers.IO) {
-                            val result = searcher.searchVenuesNearby(
-                                latitude = 22.294484301562978,
-                                longitude = 114.17415976524353,
-                                radius = 10.0
-                            )
-                            dialogState = DialogState.Success("venue nearby count: ${result.size}")
-                        }
-                    }
-                ) {
-                    Text("Get venue nearby synchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        searcher.searchVenuesNearby(
-                            latitude = 22.294484301562978,
-                            longitude = 114.17415976524353,
-                            radius = 10.0
-                        ) {
-                            dialogState = DialogState.Success("venue nearby count: ${it.size}")
-                        }
-                    }
-                ) {
-                    Text("Get venue nearby asynchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        scope.launch(Dispatchers.IO) {
-                            val result = searcher.searchPoiByBounds(
-                                Bounds(
-                                    maxLat = 22.294484301562978,
-                                    maxLon = 114.17415976524353,
-                                    minLat = 22.194484301562978,
-                                    minLon = 114.07415976524353,
-                                ),
-                                ""
-                            )
-                            dialogState = if (result == null) DialogState.Error(searchErrorText)
-                            else DialogState.Success(result.toString())
-                        }
-                    }
-                ) {
-                    Text("Get POI in Bounds synchronously")
-                }
-
-                Button(
-                    onClick = {
-                        dialogState = DialogState.Loading
-                        searcher.searchPoiByBounds(
-                            Bounds(
-                                maxLat = 22.294484301562978,
-                                maxLon = 114.17415976524353,
-                                minLat = 22.194484301562978,
-                                minLon = 114.07415976524353,
-                            ),
-                            ""
-                        ) {
-                            dialogState = if (it == null) DialogState.Error(searchErrorText)
-                            else DialogState.Success(it.toString())
-                        }
-                    }
-                ) {
-                    Text("Get POI in Bounds asynchronously")
-                }
+@Composable
+private fun SearchItemList(modifier: Modifier = Modifier, onItemClick: (SearchItem) -> Unit) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        searchItems.forEach { item ->
+            Button(
+                onClick = { onItemClick(item) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(item.title)
             }
         }
     }
 }
+
+@Composable
+private fun SearchDetailScreen(
+    item: SearchItem,
+    searcher: IDataSearcher,
+    modifier: Modifier = Modifier
+) {
+    val scope = rememberCoroutineScope()
+    val values = remember(item) { mutableStateMapOf<String, String>() }
+    var state by remember(item) { mutableStateOf<SearchState>(SearchState.Idle) }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item.fields.forEach { field ->
+            OutlinedTextField(
+                value = values[field.key].orEmpty(),
+                onValueChange = { values[field.key] = it },
+                label = { Text(field.label) },
+                keyboardOptions = KeyboardOptions(keyboardType = field.keyboardType),
+                modifier = Modifier.fillMaxWidth(),
+                minLines = if (field == venueIdsField) 3 else 1
+            )
+        }
+
+        Button(
+            onClick = {
+                val error = validateInput(item, values)
+                if (error != null) {
+                    state = SearchState.Error(error)
+                } else {
+                    state = SearchState.Loading
+                    executeSearch(item, values, searcher, scope) { state = it }
+                }
+            },
+            enabled = state !is SearchState.Loading,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Search")
+        }
+
+        when (val currentState = state) {
+            SearchState.Idle -> Unit
+            SearchState.Loading -> CircularProgressIndicator()
+            is SearchState.Success -> ResultCard("Result", currentState.message, false)
+            is SearchState.Error -> ResultCard("Error", currentState.message, true)
+        }
+    }
+}
+
+@Composable
+private fun ResultCard(title: String, message: String, isError: Boolean) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+            )
+            Text(message)
+        }
+    }
+}
+
+private fun validateInput(item: SearchItem, values: Map<String, String>): String? {
+    val requiredFields = if (item.type == SearchType.POI_BOUNDS) item.fields - keywordField else item.fields
+    if (requiredFields.any { values[it.key].isNullOrBlank() }) return "Please complete all required fields."
+    val numericFields = item.fields.filter { it.keyboardType == KeyboardType.Decimal }
+    if (numericFields.any { values[it.key]?.toDoubleOrNull() == null }) return "Please enter valid numbers."
+    if (item.type == SearchType.VENUE_IDS && parseVenueIds(values.getValue("ids")).isEmpty()) {
+        return "Please enter at least one venue ID."
+    }
+    return null
+}
+
+private fun parseVenueIds(value: String): List<String> =
+    value.split(',', '\n').map(String::trim).filter(String::isNotEmpty)
+
+private fun executeSearch(
+    item: SearchItem,
+    values: Map<String, String>,
+    searcher: IDataSearcher,
+    scope: kotlinx.coroutines.CoroutineScope,
+    updateState: (SearchState) -> Unit
+) {
+    if (item.mode == SearchMode.SYNCHRONOUS) {
+        scope.launch {
+            val state = runCatching {
+                withContext(Dispatchers.IO) { executeSynchronousSearch(item.type, values, searcher) }
+            }.getOrElse { SearchState.Error(it.message ?: searchErrorText) }
+            updateState(state)
+        }
+        return
+    }
+
+    runCatching {
+        when (item.type) {
+            SearchType.VENUE_NAME -> searcher.searchVenuesByName(values.getValue("name")) {
+                updateState(it.toVenueSearchState())
+            }
+            SearchType.VENUE_IDS -> searcher.searchVenuesByIds(parseVenueIds(values.getValue("ids"))) {
+                updateState(it.toVenueNameSearchState())
+            }
+            SearchType.POI_ID -> searcher.searchPoiById(values.getValue("id")) {
+                updateState(it?.let { poi -> SearchState.Success(poi.toString()) } ?: SearchState.Error(searchErrorText))
+            }
+            SearchType.VENUE_NEARBY -> searcher.searchVenuesNearby(
+                values.getValue("latitude").toDouble(),
+                values.getValue("longitude").toDouble(),
+                values.getValue("radius").toDouble()
+            ) { updateState(SearchState.Success("venue nearby count: ${it.size}")) }
+            SearchType.POI_BOUNDS -> searcher.searchPoiByBounds(values.toBounds(), values["keyword"].orEmpty()) {
+                updateState(it?.let { result -> SearchState.Success(result.toString()) } ?: SearchState.Error(searchErrorText))
+            }
+        }
+    }.onFailure { updateState(SearchState.Error(it.message ?: searchErrorText)) }
+}
+
+private suspend fun executeSynchronousSearch(
+    type: SearchType,
+    values: Map<String, String>,
+    searcher: IDataSearcher
+): SearchState = when (type) {
+    SearchType.VENUE_NAME -> searcher.searchVenuesByName(values.getValue("name")).toVenueSearchState()
+    SearchType.VENUE_IDS -> searcher.searchVenuesByIds(parseVenueIds(values.getValue("ids"))).toVenueNameSearchState()
+    SearchType.POI_ID -> searcher.searchPoiById(values.getValue("id"))
+        ?.let { SearchState.Success(it.toString()) } ?: SearchState.Error(searchErrorText)
+    SearchType.VENUE_NEARBY -> searcher.searchVenuesNearby(
+        values.getValue("latitude").toDouble(),
+        values.getValue("longitude").toDouble(),
+        values.getValue("radius").toDouble()
+    ).let { SearchState.Success("venue nearby count: ${it.size}") }
+    SearchType.POI_BOUNDS -> searcher.searchPoiByBounds(values.toBounds(), values["keyword"].orEmpty())
+        ?.let { SearchState.Success(it.toString()) } ?: SearchState.Error(searchErrorText)
+}
+
+private fun List<*>.toVenueSearchState(): SearchState =
+    if (isEmpty()) SearchState.Error(searchErrorText) else SearchState.Success(joinToString("\n"))
+
+private fun List<VenueInfo>.toVenueNameSearchState(): SearchState =
+    if (isEmpty()) SearchState.Error(searchErrorText)
+    else SearchState.Success(joinToString("\n") { it.venueName })
+
+private fun Map<String, String>.toBounds() = Bounds(
+    maxLat = getValue("maxLat").toDouble(),
+    maxLon = getValue("maxLon").toDouble(),
+    minLat = getValue("minLat").toDouble(),
+    minLon = getValue("minLon").toDouble()
+)
 
 @Preview
 @Composable
