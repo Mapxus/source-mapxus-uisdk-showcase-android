@@ -8,7 +8,8 @@ lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.0-alpha01"
 kotlin = "2.3.0"
 composeBom = "2026.01.00"
-dropinui-common = "7.15.0"
+dropinui-common = "7.16.1"
+dropinui-jp = "7.16.1"
 nav3 = "1.0.0"
 kotlinxSerialization = "1.10.0"
 colorpicker = "1.1.2"
@@ -38,7 +39,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 # mapxus
 mapxus-dropin = { module = "com.mapxus:dropin", version.ref = "dropinui-common" }
-mapxus-dropin-jp = { module = "com.mapxus:dropin-jp", version.ref = "dropinui-common" }
+mapxus-dropin-jp = { module = "com.mapxus:dropin-jp", version.ref = "dropinui-jp" }
 
 # Github
 compose-colorpicker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }

@@ -20,12 +20,9 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 4
-        versionName = "1.1.1"
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "appid", "\"${secretProperties["appid-prod"] as String}\"")
-        buildConfigField("String", "secret", "\"${secretProperties["secret-prod"] as String}\"")
     }
 
     buildTypes {
@@ -35,6 +32,20 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    flavorDimensions += "sdk"
+    productFlavors {
+        create("mapxus") {
+            dimension = "sdk"
+            buildConfigField("String", "appid", "\"${secretProperties["appid-prod"] as String}\"")
+            buildConfigField("String", "secret", "\"${secretProperties["secret-prod"] as String}\"")
+        }
+        create("jp") {
+            dimension = "sdk"
+            applicationId = "com.mapxus.uisdkshowcase.jp"
+            buildConfigField("String", "appid", "\"${secretProperties["appid-jp"] as String}\"")
+            buildConfigField("String", "secret", "\"${secretProperties["secret-jp"] as String}\"")
         }
     }
     compileOptions {
@@ -72,7 +83,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    implementation(libs.mapxus.dropin)
+    "mapxusImplementation"(libs.mapxus.dropin)
+    "jpImplementation"(libs.mapxus.dropin.jp)
 
     implementation(libs.compose.colorpicker)
 }
