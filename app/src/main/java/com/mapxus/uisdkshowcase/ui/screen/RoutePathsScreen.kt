@@ -30,11 +30,14 @@ import com.mapxus.dropin.uicore.navi.AppRoute
 import com.mapxus.dropin.uicore.navi.BuildingDetailRoute
 import com.mapxus.dropin.uicore.navi.EventDetailRoute
 import com.mapxus.dropin.uicore.navi.LandingPageRoute
+import com.mapxus.dropin.uicore.navi.LocationRoute
 import com.mapxus.dropin.uicore.navi.NavigationRoute
 import com.mapxus.dropin.uicore.model.CurrentLocationStartPoint
 import com.mapxus.dropin.uicore.model.DestinationPoint
 import com.mapxus.dropin.uicore.model.GeoDestinationPoint
 import com.mapxus.dropin.uicore.model.GeoStartPoint
+import com.mapxus.dropin.uicore.model.IndoorLocation
+import com.mapxus.dropin.uicore.model.OutdoorLocation
 import com.mapxus.dropin.uicore.model.PoiDestinationPoint
 import com.mapxus.dropin.uicore.model.StartPoint
 import com.mapxus.dropin.uicore.navi.PoiDetailRoute
@@ -48,6 +51,7 @@ private const val BUILDING_PAGE = "Building Page"
 private const val POI_PAGE = "POI Page"
 private const val EVENT_PAGE = "Event Page"
 private const val NAVIGATION_PAGE = "Navigation Page"
+private const val LOCATION_ROUTE = "Location Route"
 private const val START_POINT_NONE = "None"
 private const val START_POINT_CURRENT_LOCATION = "Current Location"
 private const val START_POINT_GEO = "Geo Start Point"
@@ -63,6 +67,7 @@ private enum class RouteOption(val title: String) {
     POI(POI_PAGE),
     EVENT(EVENT_PAGE),
     NAVIGATION(NAVIGATION_PAGE),
+    LOCATION(LOCATION_ROUTE),
 }
 
 private sealed interface RouteEditorConfig {
@@ -75,6 +80,8 @@ private sealed interface RouteEditorConfig {
     ) : RouteEditorConfig
 
     data object Navigation : RouteEditorConfig
+
+    data object Location : RouteEditorConfig
 }
 
 private data class RouteOptionSpec(
@@ -89,6 +96,7 @@ private fun routeOption(route: AppRoute): RouteOption = when (route) {
     is PoiDetailRoute -> RouteOption.POI
     is EventDetailRoute -> RouteOption.EVENT
     is NavigationRoute -> RouteOption.NAVIGATION
+    is LocationRoute -> RouteOption.LOCATION
     else -> RouteOption.LANDING
 }
 
@@ -143,6 +151,12 @@ private fun routeOptionSpec(option: RouteOption): RouteOptionSpec = when (option
         option = option,
         editor = RouteEditorConfig.Navigation,
         buildRoute = { buildNavigationRoute() }
+    )
+
+    RouteOption.LOCATION -> RouteOptionSpec(
+        option = option,
+        editor = RouteEditorConfig.Location,
+        buildRoute = { buildLocationRoute() }
     )
 }
 
@@ -229,6 +243,19 @@ private fun buildNavigationRoute(): NavigationRoute = NavigationRoute(
     buildNavigationDestinationPoint()
 )
 
+private fun buildLocationRoute(): LocationRoute {
+    val latitude = ConfigHolder.routeLocationLatitude.toDoubleOrNull() ?: 0.0
+    val longitude = ConfigHolder.routeLocationLongitude.toDoubleOrNull() ?: 0.0
+    val floorId = ConfigHolder.routeLocationFloorId.takeIf { it.isNotBlank() }
+    val sharedFloorId = ConfigHolder.routeLocationSharedFloorId.takeIf { it.isNotBlank() }
+    val location = when {
+        floorId != null -> IndoorLocation.createWithFloor(latitude, longitude, floorId)
+        sharedFloorId != null -> IndoorLocation.createWithSharedFloor(latitude, longitude, sharedFloorId)
+        else -> OutdoorLocation.createWith(latitude, longitude)
+    }
+    return LocationRoute(location)
+}
+
 private data class NavigationFormState(
     val startPointType: ConfigHolder.RouteStartPointType,
     val destinationPointType: ConfigHolder.RouteDestinationPointType,
@@ -241,6 +268,13 @@ private data class NavigationFormState(
     val destinationFloorId: String,
     val destinationSharedFloorId: String,
     val destinationPoiId: String,
+)
+
+private data class LocationFormState(
+    val latitude: String,
+    val longitude: String,
+    val floorId: String,
+    val sharedFloorId: String,
 )
 
 private fun navigationFormStateFromConfig(): NavigationFormState = NavigationFormState(
@@ -257,6 +291,13 @@ private fun navigationFormStateFromConfig(): NavigationFormState = NavigationFor
     destinationPoiId = ConfigHolder.routeNavigationDestinationPoiId
 )
 
+private fun locationFormStateFromConfig(): LocationFormState = LocationFormState(
+    latitude = ConfigHolder.routeLocationLatitude,
+    longitude = ConfigHolder.routeLocationLongitude,
+    floorId = ConfigHolder.routeLocationFloorId,
+    sharedFloorId = ConfigHolder.routeLocationSharedFloorId,
+)
+
 private fun NavigationFormState.persistToConfig() {
     ConfigHolder.routeNavigationStartPointType = startPointType
     ConfigHolder.routeNavigationDestinationPointType = destinationPointType
@@ -271,6 +312,13 @@ private fun NavigationFormState.persistToConfig() {
     ConfigHolder.routeNavigationDestinationPoiId = destinationPoiId
 }
 
+private fun LocationFormState.persistToConfig() {
+    ConfigHolder.routeLocationLatitude = latitude
+    ConfigHolder.routeLocationLongitude = longitude
+    ConfigHolder.routeLocationFloorId = floorId
+    ConfigHolder.routeLocationSharedFloorId = sharedFloorId
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoutePathsScreen(modifier: Modifier = Modifier) {
@@ -278,6 +326,7 @@ fun RoutePathsScreen(modifier: Modifier = Modifier) {
     var selectedOption by remember { mutableStateOf(routeOption(ConfigHolder.appRoute)) }
     var selectedRouteInput by remember { mutableStateOf(routeInputValue(selectedOption)) }
     var navigationFormState by remember { mutableStateOf(navigationFormStateFromConfig()) }
+    var locationFormState by remember { mutableStateOf(locationFormStateFromConfig()) }
 
     fun updateSelectedRoute() {
         ConfigHolder.appRoute = routeOptionSpec(selectedOption).buildRoute()
@@ -345,8 +394,74 @@ fun RoutePathsScreen(modifier: Modifier = Modifier) {
                 )
             }
 
+            RouteEditorConfig.Location -> {
+                LocationRouteEditor(
+                    state = locationFormState,
+                    onStateChange = { updatedState ->
+                        locationFormState = updatedState
+                        updatedState.persistToConfig()
+                        updateSelectedRoute()
+                    }
+                )
+            }
+
             RouteEditorConfig.None -> Unit
         }
+    }
+}
+
+@Composable
+private fun LocationRouteEditor(
+    state: LocationFormState,
+    onStateChange: (LocationFormState) -> Unit,
+) {
+    PointDataSection("Location Data") {
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            value = state.latitude,
+            onValueChange = {
+                if (isDecimalInput(it)) {
+                    onStateChange(state.copy(latitude = it))
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            singleLine = true,
+            label = { Text("Latitude") }
+        )
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            value = state.longitude,
+            onValueChange = {
+                if (isDecimalInput(it)) {
+                    onStateChange(state.copy(longitude = it))
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            singleLine = true,
+            label = { Text("Longitude") }
+        )
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            value = state.floorId,
+            onValueChange = { onStateChange(state.copy(floorId = it)) },
+            singleLine = true,
+            label = { Text("Floor Id (optional)") }
+        )
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            value = state.sharedFloorId,
+            onValueChange = { onStateChange(state.copy(sharedFloorId = it)) },
+            singleLine = true,
+            label = { Text("Shared Floor Id (optional; used when Floor Id is empty)") }
+        )
     }
 }
 

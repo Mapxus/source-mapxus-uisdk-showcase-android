@@ -11,6 +11,8 @@ import com.mapxus.uisdkshowcase.model.item.CopyrightConfig
 import com.mapxus.uisdkshowcase.model.item.EventModuleTitle
 import com.mapxus.uisdkshowcase.model.item.EventOverviewTitle
 import com.mapxus.uisdkshowcase.model.item.EnableBearingCalibration
+import com.mapxus.uisdkshowcase.model.item.EnablePoiLiveStatus
+import com.mapxus.uisdkshowcase.model.item.EnableReroute
 import com.mapxus.uisdkshowcase.model.item.FilterChipsConfig
 import com.mapxus.uisdkshowcase.model.item.FloorSwitchScope
 import com.mapxus.uisdkshowcase.model.item.FixedDisplayCategories
@@ -40,6 +42,7 @@ import com.mapxus.uisdkshowcase.model.item.PublicHolidayDisplayName
 import com.mapxus.uisdkshowcase.model.item.PublicTransportModes
 import com.mapxus.uisdkshowcase.model.item.RecommendedCategories
 import com.mapxus.uisdkshowcase.model.item.RecommendedPoiIds
+import com.mapxus.uisdkshowcase.model.item.RouteRenderMode
 import com.mapxus.uisdkshowcase.model.item.SelectedBuildingBorderStyle
 import com.mapxus.uisdkshowcase.model.item.SendLogButtonTitle
 import com.mapxus.uisdkshowcase.model.item.SettingsLanguageOptions
@@ -74,6 +77,7 @@ fun Item.Screen(onBack: () -> Unit) {
         RecommendedPoiIds -> RecommendedPoiIdsScreen(this, onBack = onBack)
         PoiSorting -> PoiSortingScreen(this, onBack = onBack)
         CategoryListConfig -> CategoryListConfigScreen(this, onBack = onBack)
+        EnablePoiLiveStatus -> EnablePoiLiveStatusScreen(this, onBack = onBack)
 
         // Venue Configuration
         IsBuildingListVisible -> IsBuildingListVisibleScreen(this, onBack = onBack)
@@ -90,6 +94,8 @@ fun Item.Screen(onBack: () -> Unit) {
         PublicTransportModes -> PublicTransportModesScreen(this, onBack = onBack)
         MaximumRoutePlanningDistance -> MaximumRoutePlanningDistanceScreen(this, onBack = onBack)
         NavigationRoadSnapStrength -> NavigationRoadSnapStrengthScreen(this, onBack = onBack)
+        RouteRenderMode -> RouteRenderModeScreen(this, onBack = onBack)
+        EnableReroute -> EnableRerouteScreen(this, onBack = onBack)
         EnableBearingCalibration -> EnableBearingCalibrationScreen(this, onBack = onBack)
         NoRouteAvailableTitle -> NoRouteAvailableTitleScreen(this, onBack = onBack)
         NoRouteAvailableMessage -> NoRouteAvailableMessageScreen(this, onBack = onBack)

@@ -13,6 +13,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.mapxus.dropin.uicore.navi.BuildingDetailRoute
 import com.mapxus.dropin.uicore.navi.EventDetailRoute
+import com.mapxus.dropin.uicore.navi.LocationRoute
 import com.mapxus.dropin.uicore.navi.PoiDetailRoute
 import com.mapxus.dropin.uicore.navi.VenueDetailRoute
 import com.mapxus.uisdkshowcase.ConfigHolder
@@ -128,6 +129,18 @@ fun checkRouteValidation(): String? = with(ConfigHolder) {
         is EventDetailRoute -> {
             if (routeEventId.isBlank()) "Event Page requires Event Id"
             else null
+        }
+
+        is LocationRoute -> {
+            val latitude = routeLocationLatitude.toDoubleOrNull()
+            val longitude = routeLocationLongitude.toDoubleOrNull()
+            if (latitude == null || !latitude.isFinite() || latitude !in -90.0..90.0 ||
+                longitude == null || !longitude.isFinite() || longitude !in -180.0..180.0
+            ) {
+                "Location Route requires valid latitude (-90..90) and longitude (-180..180)"
+            } else {
+                null
+            }
         }
 
         else -> null

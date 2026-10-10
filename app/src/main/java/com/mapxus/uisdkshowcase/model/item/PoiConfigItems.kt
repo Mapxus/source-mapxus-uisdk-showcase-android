@@ -32,6 +32,12 @@ object PoiSorting : Item {
     override val photoResInt: Int = R.drawable.ic_launcher_background
 }
 
+object EnablePoiLiveStatus : Item {
+    override val title: String = "Enable POI Live Status"
+    override val description: String = "Toggle live status information for POIs"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+
 object CategoryListConfig : Item {
     override val title: String = "Category List Config"
     override val description: String = "Configure the appearance and behavior of category lists"

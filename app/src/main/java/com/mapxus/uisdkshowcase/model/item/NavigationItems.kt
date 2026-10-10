@@ -44,3 +44,14 @@ object EnableBearingCalibration : Item {
     override val photoResInt: Int = R.drawable.ic_launcher_background
 }
 
+object RouteRenderMode : Item {
+    override val title: String = "Route Render Mode"
+    override val description: String = "Configure how navigation routes are rendered"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+
+object EnableReroute : Item {
+    override val title: String = "Enable Reroute"
+    override val description: String = "Toggle automatic rerouting during navigation"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}

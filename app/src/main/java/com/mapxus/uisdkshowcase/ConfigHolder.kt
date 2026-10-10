@@ -12,6 +12,7 @@ import com.mapxus.dropin.uicore.api.NavigationMode
 import com.mapxus.dropin.uicore.api.PoiDetailSection
 import com.mapxus.dropin.uicore.api.PoiSortingStrategy
 import com.mapxus.dropin.uicore.api.PublicTransportMode
+import com.mapxus.dropin.uicore.api.RouteRenderMode
 import com.mapxus.dropin.uicore.api.ShareDisplayMode
 import com.mapxus.dropin.uicore.api.SharedFloorsUnifiedName
 import com.mapxus.dropin.uicore.api.ToolTipsConfig
@@ -145,6 +146,12 @@ object ConfigHolder {
             configBuilder.poiSorting = value
         }
 
+    var enablePoiLiveStatus: Boolean
+        get() = configBuilder.enablePoiLiveStatus
+        set(value) {
+            configBuilder.enablePoiLiveStatus = value
+        }
+
     var categoryListConfig: List<String>?
         get() = configBuilder.categoryListConfig
         set(value) {
@@ -222,6 +229,18 @@ object ConfigHolder {
         get() = configBuilder.navigationRoadSnapStrength
         set(value) {
             configBuilder.navigationRoadSnapStrength = value
+        }
+
+    var routeRenderMode: RouteRenderMode
+        get() = configBuilder.routeRenderMode
+        set(value) {
+            configBuilder.routeRenderMode = value
+        }
+
+    var enableReroute: Boolean
+        get() = configBuilder.enableReroute
+        set(value) {
+            configBuilder.enableReroute = value
         }
 
     var enableBearingCalibration: Boolean
@@ -370,6 +389,10 @@ object ConfigHolder {
     var routeBuildingId: String = ""
     var routePoiId: String = ""
     var routeEventId: String = ""
+    var routeLocationLatitude: String = ""
+    var routeLocationLongitude: String = ""
+    var routeLocationFloorId: String = ""
+    var routeLocationSharedFloorId: String = ""
     var routeNavigationStartPointType: RouteStartPointType = RouteStartPointType.NONE
     var routeNavigationDestinationPointType: RouteDestinationPointType = RouteDestinationPointType.NONE
     var routeNavigationStartLatitude: String = ""

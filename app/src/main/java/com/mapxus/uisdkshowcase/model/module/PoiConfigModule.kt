@@ -1,6 +1,7 @@
 package com.mapxus.uisdkshowcase.model.module
 
 import com.mapxus.uisdkshowcase.model.item.CategoryListConfig
+import com.mapxus.uisdkshowcase.model.item.EnablePoiLiveStatus
 import com.mapxus.uisdkshowcase.model.item.Item
 import com.mapxus.uisdkshowcase.model.item.PoiDetailSections
 import com.mapxus.uisdkshowcase.model.item.PoiSorting
@@ -15,6 +16,7 @@ object PoiConfigModule : Module {
         RecommendedCategories,
         RecommendedPoiIds,
         PoiSorting,
-        CategoryListConfig
+        CategoryListConfig,
+        EnablePoiLiveStatus
     )
 }
