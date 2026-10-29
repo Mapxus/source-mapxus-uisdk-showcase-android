@@ -243,6 +243,12 @@ object ConfigHolder {
             configBuilder.enableReroute = value
         }
 
+    var enableVRNavigation: Boolean
+        get() = configBuilder.enableVRNavigation
+        set(value) {
+            configBuilder.enableVRNavigation = value
+        }
+
     var enableBearingCalibration: Boolean
         get() = configBuilder.enableBearingCalibration
         set(value) {

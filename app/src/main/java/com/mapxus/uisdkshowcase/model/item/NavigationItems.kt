@@ -55,3 +55,10 @@ object EnableReroute : Item {
     override val description: String = "Toggle automatic rerouting during navigation"
     override val photoResInt: Int = R.drawable.ic_launcher_background
 }
+
+object EnableVRNavigation : Item {
+    override val title: String = "Enable VR Navigation"
+    override val description: String = "Toggle visual navigation during navigation"
+    override val photoResInt: Int = R.drawable.ic_launcher_background
+}
+

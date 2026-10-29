@@ -13,6 +13,7 @@ import com.mapxus.uisdkshowcase.model.item.EventOverviewTitle
 import com.mapxus.uisdkshowcase.model.item.EnableBearingCalibration
 import com.mapxus.uisdkshowcase.model.item.EnablePoiLiveStatus
 import com.mapxus.uisdkshowcase.model.item.EnableReroute
+import com.mapxus.uisdkshowcase.model.item.EnableVRNavigation
 import com.mapxus.uisdkshowcase.model.item.FilterChipsConfig
 import com.mapxus.uisdkshowcase.model.item.FloorSwitchScope
 import com.mapxus.uisdkshowcase.model.item.FixedDisplayCategories
@@ -96,6 +97,7 @@ fun Item.Screen(onBack: () -> Unit) {
         NavigationRoadSnapStrength -> NavigationRoadSnapStrengthScreen(this, onBack = onBack)
         RouteRenderMode -> RouteRenderModeScreen(this, onBack = onBack)
         EnableReroute -> EnableRerouteScreen(this, onBack = onBack)
+        EnableVRNavigation -> EnableVRNavigationScreen(this, onBack = onBack)
         EnableBearingCalibration -> EnableBearingCalibrationScreen(this, onBack = onBack)
         NoRouteAvailableTitle -> NoRouteAvailableTitleScreen(this, onBack = onBack)
         NoRouteAvailableMessage -> NoRouteAvailableMessageScreen(this, onBack = onBack)

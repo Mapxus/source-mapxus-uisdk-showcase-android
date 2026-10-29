@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.mapxus.dropin.uicore.DISdk
+import com.mapxus.dropin.uicore.api.Language
 import com.mapxus.dropin.uicore.api.event.BuildingEventListener
 import com.mapxus.dropin.uicore.api.event.CategorySearchEventListener
 import com.mapxus.dropin.uicore.api.event.EventListener
@@ -347,6 +348,7 @@ class MapActivity : ComponentActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+
                 })
             }
 
@@ -547,6 +549,14 @@ class MapActivity : ComponentActivity() {
                 setMenuEventListener(object : MenuEventListener {
                     override fun onClose() {
                         Toast.makeText(this@MapActivity, "onClose", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onLanguageSelected(language: Language) {
+                        Toast.makeText(
+                            this@MapActivity,
+                            "onLanguageSelected: $language",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 })
             }

@@ -3,6 +3,7 @@ package com.mapxus.uisdkshowcase.model.module
 import com.mapxus.uisdkshowcase.model.item.Item
 import com.mapxus.uisdkshowcase.model.item.EnableBearingCalibration
 import com.mapxus.uisdkshowcase.model.item.EnableReroute
+import com.mapxus.uisdkshowcase.model.item.EnableVRNavigation
 import com.mapxus.uisdkshowcase.model.item.MaximumRoutePlanningDistance
 import com.mapxus.uisdkshowcase.model.item.NavigationModes
 import com.mapxus.uisdkshowcase.model.item.NavigationRoadSnapStrength
@@ -20,6 +21,7 @@ object NavigationModule : Module {
         NavigationRoadSnapStrength,
         RouteRenderMode,
         EnableReroute,
+        EnableVRNavigation,
         EnableBearingCalibration,
 //        NoRouteAvailableTitle,
         NoRouteAvailableMessage
